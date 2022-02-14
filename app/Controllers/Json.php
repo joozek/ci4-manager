@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\OrderModel;
 
-class Json extends BaseController
+class Json extends Main
 {
     public function __construct()
     {
@@ -36,21 +36,10 @@ class Json extends BaseController
         $this->load->view('json/index', $data);
     }
 
-    function edit()
+    function create()
     {
-        $json = getValidJSON($this->input->raw_input_stream);
+        $json = getValidJSON($this->request->getBody());
 
-        $edited = $this->order_model->update_order($json->uuid, $json);
-
-        \var_dump(['Status' => $edited ? 'Updated' : 'Error']);
-    }
-
-    function remove()
-    {
-        $json = getValidJSON($this->input->raw_input_stream);
-
-        $removed = $this->order_model->remove_order($json->uuid);
-
-        \var_dump(['Status' => $removed ? 'Removed' : 'Error']);
+        $this->model->createOrder($json);
     }
 }

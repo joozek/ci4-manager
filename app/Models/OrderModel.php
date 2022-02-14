@@ -3,62 +3,74 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Classes\OrderSearchCriteria;
 
 class OrderModel extends Model
 {
     protected $table = 'orders';
+    protected $allowedFields = ['uuid', 'status', 'shipment', 'payment', 'shipping_total'];
+    protected $returnType = 'object';
 
-    public function getOrdersRequest(array $criteria = null): OrderModel
+    public function getOrdersRequest(OrderSearchCriteria $criteria = null, int $limit = null, int $offset = null): OrderModel
     {
         $request = $this->select(['uuid', 'status', 'client_id', 'shipment', 'payment', 'shipping_total']);
-        if (!empty($criteria)) {
-            if (array_key_exists('uuid', $criteria)) {
-                $request->like('uuid', $criteria['uuid']);
+
+
+        if (isset($criteria)) {
+            // Search by criteria
+            if (!empty(($criteria->getUUID()))) {
+                $request->like('uuid', $criteria->getUUID());
             }
-            if (array_key_exists('payment', $criteria)) {
-                $request->like('payment', $criteria['payment']);
+            if (!empty($criteria->getStatus())) {
+                $request->like('status', $criteria->getStatus());
             }
-            if (array_key_exists('date', $criteria)) {
-                $request->like('date', $criteria['date']);
+            if (!empty($criteria->getShippingTotal())) {
+                $request->like('shipping_total', $criteria->getShippingTotal());
             }
-            if (array_key_exists('client_id', $criteria)) {
-                $request->like('client_id', $criteria['client_id']);
+            if (!empty($criteria->getShipment())) {
+                $request->like('shipment', $criteria->getShipment());
             }
-            if (array_key_exists('status', $criteria)) {
-                $request->like('status', $criteria['status']);
+
+            //ORDER CRITERIA
+            if (!empty($criteria->getSortUUID())) {
+                $request->orderBy('uuid', $criteria->getSortUUID());
             }
-            if (array_key_exists('shipping_total', $criteria)) {
-                $request->like('shipping_total', $criteria['shipping_total']);
+            if (!empty($criteria->getSortStatus())) {
+                $request->orderBy('status', $criteria->getSortStatus());
             }
-            if (array_key_exists('shipment', $criteria)) {
-                $request->like('shipment', $criteria['shipment']);
+            if (!empty($criteria->getSortShippingTotal())) {
+                $request->orderBy('shipping_total', $criteria->getSortShippingTotal());
             }
-            if (array_key_exists('order_by', $criteria)) {
-                if (array_key_exists('is_desc', $criteria)) {
-                    $asc = $criteria['is_desc'] === 'on' ? 'DESC' : "ASC";
-                    $request->orderBy($criteria['order_by'], $asc);
-                }
+            if (!empty($criteria->getSortShipment())) {
+                $request->orderBy('shipment', $criteria->getSortShipment());
             }
         }
+
+        $request->limit($limit, $offset);
 
         return $request;
     }
 
-    public function getOrdersLimit(int $limit, int $offset = 0): array
-    {
-        return $this->getOrdersRequest()->limit($limit, $offset)->findAll();
-    }
-
-    public function getOrdersCount(array $criteria): int
+    public function countOrders(OrderSearchCriteria $criteria): int
     {
         return $this->getOrdersRequest($criteria)->countAllResults();
     }
 
-    public function getOrders(array $criteria = null): array
+    public function getOrders(OrderSearchCriteria $criteria = null, int $limit = null, int $offset = null): array
     {
-        return $this->getOrdersRequest($criteria)->findAll();
+        return $this->getOrdersRequest($criteria, $limit ?? 100, $offset)->findAll();
     }
 
+    public function createOrder(array $criteria)
+    {
+        if (empty($criteria)) {
+            throw new \Exception('Criteria are empty');
+        }
+
+        $criteria['date'] = date('Y-m-d H:i:s');
+
+        return $this->insert($criteria);
+    }
     // public function getOrdersWithProductsRequest($uuid): OrderModel
     // {
     //     return $this
