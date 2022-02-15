@@ -36,11 +36,6 @@ class Pagination
     return $this->pagesCount;
   }
 
-  public function getLimit()
-  {
-    return $this->perPage;
-  }
-
   public function getOffset($page)
   {
     $offset = ($page - 1 > 0 ? $page - 1 : 0) * $this->perPage;

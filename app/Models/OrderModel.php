@@ -11,7 +11,7 @@ class OrderModel extends Model
     protected $allowedFields = ['uuid', 'status', 'shipment', 'payment', 'shipping_total'];
     protected $returnType = 'object';
 
-    public function getOrdersRequest(OrderSearchCriteria $criteria = null, int $limit = null, int $offset = null): OrderModel
+    public function getOrdersRequest(OrderSearchCriteria $criteria = null): OrderModel
     {
         $request = $this->select(['uuid', 'status', 'client_id', 'shipment', 'payment', 'shipping_total']);
 
@@ -46,8 +46,6 @@ class OrderModel extends Model
             }
         }
 
-        $request->limit($limit, $offset);
-
         return $request;
     }
 
@@ -58,7 +56,9 @@ class OrderModel extends Model
 
     public function getOrders(OrderSearchCriteria $criteria = null, int $limit = null, int $offset = null): array
     {
-        return $this->getOrdersRequest($criteria, $limit ?? 100, $offset)->findAll();
+        $query = $this->getOrdersRequest($criteria)->findAll($limit, $offset);
+
+        return $query;
     }
 
     public function createOrder(array $criteria)

@@ -24,11 +24,11 @@
                     <button class="arrow">
                         <?php
                         if (isset($form->sort_uuid) && $form->sort_uuid === 'DESC') {
-                            echo '<i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort-up"></i>';
                         } else if (isset($form->sort_uuid) && $form->sort_uuid === 'ASC') {
-                            echo '<i class="fa fa-arrow-down"></i>';
+                            echo '<i class="fa fa-sort-down"></i>';
                         } else {
-                            echo '<i class="fa fa-arrow-down"></i><i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort"></i>';
                         }
                         ?>
                     </button>
@@ -39,11 +39,11 @@
                     <button class="arrow">
                         <?php
                         if (isset($form->sort_status) && $form->sort_status === 'DESC') {
-                            echo '<i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort-up"></i>';
                         } else if (isset($form->sort_status) && $form->sort_status === 'ASC') {
-                            echo '<i class="fa fa-arrow-down"></i>';
+                            echo '<i class="fa fa-sort-down"></i>';
                         } else {
-                            echo '<i class="fa fa-arrow-down"></i><i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort"></i>';
                         }
                         ?>
                     </button>
@@ -54,11 +54,11 @@
                     <button class="arrow">
                         <?php
                         if (isset($form->sort_shipping_total) && $form->sort_shipping_total === 'DESC') {
-                            echo '<i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort-up"></i>';
                         } else if (isset($form->sort_shipping_total) && $form->sort_shipping_total === 'ASC') {
-                            echo '<i class="fa fa-arrow-down"></i>';
+                            echo '<i class="fa fa-sort-down"></i>';
                         } else {
-                            echo '<i class="fa fa-arrow-down"></i><i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort"></i>';
                         }
                         ?>
                     </button>
@@ -69,11 +69,11 @@
                     <button class="arrow">
                         <?php
                         if (isset($form->sort_shipment) && $form->sort_shipment === 'DESC') {
-                            echo '<i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort-up"></i>';
                         } else if (isset($form->sort_shipment) && $form->sort_shipment === 'ASC') {
-                            echo '<i class="fa fa-arrow-down"></i>';
+                            echo '<i class="fa fa-sort-down"></i>';
                         } else {
-                            echo '<i class="fa fa-arrow-down"></i><i class="fa fa-arrow-up"></i>';
+                            echo '<i class="fa fa-sort"></i>';
                         }
                         ?>
                     </button>
