@@ -3,7 +3,6 @@
 namespace App\Classes;
 
 use Config\Services;
-
 class Pagination
 {
   private $perPage = 5;
@@ -15,6 +14,35 @@ class Pagination
   private $method = 'POST';
   private $pageField = 'page';
   private $limitField = 'limit';
+
+  private $pageJS = "
+  <script>
+    const links = document.querySelectorAll('.link');
+    const page = document.querySelector('#page');
+  
+    links.forEach((link) => {
+      link.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        page.setAttribute('value', ev.target.value);
+        link.parentElement.submit();
+      });
+  });
+  </script>";
+
+  private $limitJS = "
+  <script>
+    const limitLinks = document.querySelectorAll('.limit');
+    const limit = document.querySelector('#limit');
+
+    limitLinks.forEach((limitLink) => {
+        limitLink.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            limit.setAttribute('value', ev.target.value);
+
+            limitLink.parentElement.submit();
+        });
+    });
+  </script>";
 
   private $containerClass = 'pagination';
   private $itemClass = 'pagination__item';
@@ -64,6 +92,8 @@ class Pagination
       $class = ($perPage ===   $this->perPage) ? $activeClass : $itemClass;
       $perPageLinks .= '<input type="submit" class="limit '.$class.'" value="'.$perPage.'" />';
     }
+
+    $perPageLinks .= $this->limitJS;
 
     $perPageLinks .= '</form>';
     
@@ -182,6 +212,7 @@ class Pagination
     $output .= $this->createHiddenPostFields();
     $output .= '<input id="' . $this->pageField . '" type="hidden" name="' . $this->pageField . '" value="">';
     $output .= $this->createLinks($page);
+    $output .= $this->pageJS;
     $output .= '</form>';
 
     return $output;

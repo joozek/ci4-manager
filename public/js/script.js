@@ -37,26 +37,3 @@ arrows.forEach((arrow) => {
     });
 })
 
-const links = document.querySelectorAll('.link');
-const page = document.querySelector('#page');
-
-links.forEach((link) => {
-    link.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        page.setAttribute('value', ev.target.value);
-
-        link.parentElement.submit();
-    });
-});
-
-const limitLinks = document.querySelectorAll('.limit');
-const limit = document.querySelector('#limit');
-
-limitLinks.forEach((limitLink) => {
-    limitLink.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        limit.setAttribute('value', ev.target.value);
-
-        limitLink.parentElement.submit();
-    })
-})

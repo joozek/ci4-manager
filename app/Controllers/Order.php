@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\OrderModel;
 use App\Classes\OrderSearchCriteria;
+use App\Classes\OrderCreateCriteria;
 use App\Classes\Pagination;
 
 class Action
@@ -56,16 +57,6 @@ class Order extends Main
         return $criteria;
     }
 
-    private function export(string $format)
-    {
-        if ($format === 'xlsx' || $format === 'csv') {
-            redirect('/excel?format=' . $format, 'location', 301);
-        } elseif ($format === 'docx') {
-            redirect('/word', 'location', 301);
-        } elseif ($format === 'json') {
-            redirect('/json', 'location', 301);
-        }
-    }
 
     public function index()
     {
@@ -75,10 +66,9 @@ class Order extends Main
         $postParams = (object) $this->request->getPost();
         $getParams = (object) $this->request->getGet();
 
-        if (!empty($getParams->format)) {
-            $this->export($getParams->format);
+        if(!empty($getParams->method) && $getParams->method === 'create') {
+            $this->create($postParams);
         }
-
 
         $criteria = $this->setCriteria($postParams);
         $ordersCount = $model->countOrders($criteria);
@@ -135,5 +125,47 @@ class Order extends Main
         ];
 
         return view('order/index', $data);
+    }
+
+    private function setCreateCriteria(object $params) {
+        $model = model(OrderModel::class);
+        helper('create');
+
+        $createCriteria = new OrderCreateCriteria();
+
+        $uuid = generateUUID();
+
+        $createCriteria->setUUID($uuid);
+
+        if(!empty($params->status)) {
+            $createCriteria->setStatus($params->status);
+        }
+        if(!empty($params->shipping_total)) {
+            $createCriteria->setShippingTotal($params->shipping_total);
+        }
+        if(!empty($params->shipment)) {
+            $createCriteria->setShipment($params->shipment);
+        }
+        if(!empty($params->payment)) {
+            $createCriteria->setPayment($params->payment);
+        }
+        if(!empty($params->client_id)) {
+            $createCriteria->setClientID($params->client_id);
+        }
+
+        $date = date('Y-m-d H:i:s');
+
+        $createCriteria->setDate($date);
+
+        return $createCriteria;
+    }
+
+    public function create() {
+        $model = model(OrderModel::class);
+        $postParams = (object) $this->request->getPost();
+
+        $criteria = $this->setCreateCriteria($postParams);
+
+        echo $model->insert($criteria) ? 'SUCCESS' : 'FAILURE';
     }
 }

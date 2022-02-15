@@ -8,7 +8,7 @@ use App\Classes\OrderSearchCriteria;
 class OrderModel extends Model
 {
     protected $table = 'orders';
-    protected $allowedFields = ['uuid', 'status', 'shipment', 'payment', 'shipping_total'];
+    protected $allowedFields = ['uuid', 'status', 'shipment', 'payment', 'shipping_total', 'date', 'client_id'];
     protected $returnType = 'object';
 
     public function getOrdersRequest(OrderSearchCriteria $criteria = null): OrderModel
@@ -17,7 +17,7 @@ class OrderModel extends Model
 
 
         if (isset($criteria)) {
-            // Search by criteria
+            //SEARCH CRIT
             if (!empty(($criteria->getUUID()))) {
                 $request->like('uuid', $criteria->getUUID());
             }
@@ -56,8 +56,10 @@ class OrderModel extends Model
 
     public function getOrders(OrderSearchCriteria $criteria = null, int $limit = null, int $offset = null): array
     {
-        $query = $this->getOrdersRequest($criteria)->findAll($limit, $offset);
+        return $this->getOrdersRequest($criteria)->findAll($limit, $offset);
+    }
 
-        return $query;
+    public function createOrder($data) {
+        return $this->insert($data);
     }
 }

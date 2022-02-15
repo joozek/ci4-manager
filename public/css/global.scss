@@ -81,6 +81,11 @@ body {
     border: 2px solid $cta;
     border-radius: 10px;
     outline: none;
+
+    &:hover,
+    &:focus {
+      border-color: $darkfont;
+    }
   }
 
   &__button {
@@ -172,7 +177,7 @@ body {
     border: none;
     color: $lightfont;
     padding: 5px 10px;
-    border: 1px solid $cta;
+    border: none;
     outline: none;
     transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
     border-radius: 20px;
@@ -183,11 +188,7 @@ body {
     &:hover,
     &:focus {
       cursor: pointer;
-      border-color: $darkfont;
-      background-color: $cta;
-      .fa::before {
-        color: $darkfont;
-      }
+      background-color: $darkfont;
     }
   }
 

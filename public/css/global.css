@@ -91,6 +91,10 @@ body {
   outline: none;
 }
 
+.search__input:hover, .search__input:focus, .search__button:hover, .search__button:focus {
+  border-color: #0d566a;
+}
+
 .search__button {
   background: #14bdeb;
   color: #fcfcfc;
@@ -197,7 +201,7 @@ body {
   border: none;
   color: #fcfcfc;
   padding: 5px 10px;
-  border: 1px solid #14bdeb;
+  border: none;
   outline: none;
   -webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
@@ -209,12 +213,7 @@ body {
 
 .list__button:hover, .list__button:focus {
   cursor: pointer;
-  border-color: #0d566a;
-  background-color: #14bdeb;
-}
-
-.list__button:hover .fa::before, .list__button:focus .fa::before {
-  color: #0d566a;
+  background-color: #0d566a;
 }
 
 .list__button--absolute {
