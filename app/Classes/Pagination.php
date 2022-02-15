@@ -143,7 +143,7 @@ class Pagination
     $itemClass = $this->itemClass;
     $activeItemClass = $itemClass . ' ' . $this->activeClass;
 
-    if ($this->hasPrev($page, 2)) {
+    if ($page === $this->pagesCount && $this->hasPrev($page, 2)) {
       $output .= '<input type="submit" value="' . ($page - 2) . '" class="link ' . $itemClass . '">';
     }
 
@@ -157,7 +157,7 @@ class Pagination
       $output .= '<input type="submit" value="' . ($page + 1) . '" class="link ' . $itemClass . '">';
     }
 
-    if ($this->hasNext($page, 2)) {
+    if ($page === 1 && $this->hasNext($page, 2)) {
       $output .= '<input type="submit" value="' . ($page + 2) . '" class="link ' . $itemClass . '">';
     }
 

@@ -11,7 +11,15 @@
 <body>
     <div id="container">
         <form id="search" action="<?= $action->search ?>" method="post">
-        <div class="list header">
+            <div class="search list">
+                <input type="hidden" name="lastLimit" value="<?= $lastLimit ?>" />
+                <input type="search" name="uuid" value="<?= show_if_exists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
+                <input type="search" name="status" + value="<?= show_if_exists($form, 'status') ?>" class="search__input" placeholder="Search status" />
+                <input type="search" name="shipping_total" value="<?= show_if_exists($form, 'shipping_total') ?>" class="search__input" placeholder="Search total shipping" />
+                <input type="search" name="shipment" value="<?= show_if_exists($form, 'shipment') ?>" class="search__input" placeholder="Search shipment" />
+                <input type="submit" value="Search" class="search__button" />
+            </div>
+            <div class="list header">
                 <div class="list__header">
                     <h3>UUID</h3>
                     <button class="arrow">
@@ -76,15 +84,6 @@
                     <h3>Manage</h3>
                 </div>
             </div>
-            <div class="search list">
-                <input type="hidden" name="lastLimit" value="<?= $lastLimit ?>" />
-                <input type="search" name="uuid" value="<?= show_if_exists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
-                <input type="search" name="status" + value="<?= show_if_exists($form, 'status') ?>" class="search__input" placeholder="Search status" />
-                <input type="search" name="shipping_total" value="<?= show_if_exists($form, 'shipping_total') ?>" class="search__input" placeholder="Search total shipping" />
-                <input type="search" name="shipment" value="<?= show_if_exists($form, 'shipment') ?>" class="search__input" placeholder="Search shipment" />
-                <input type="submit" value="Search" class="search__button" />
-            </div>
-            
         </form>
         <?php if (count($orders) !== 0) : ?>
             <?php foreach ($orders as $o) : ?>
@@ -118,6 +117,7 @@
                 <h2 class="any">Any results.</h1>
             </div>
         <?php endif; ?>
+        <?php /*Created in: <?= $time ?>s */?>
         <div class="links">
         <?= $links ?>
         <?= $limitLinks ?>

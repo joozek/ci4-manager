@@ -13,9 +13,9 @@ class Action
     public $show = '/?method=show';
     public $remove = '/?method=remove';
     public $json = '/?format=json';
-    public $xlsx = '/?format=xlsx';
-    public $csv = '/?format=csv';
-    public $docx = '/?format=docx';
+    public $xlsx = '/excel?format=xlsx';
+    public $csv = '/excel?format=csv';  
+    public $docx = '/word';
 }
 
 class Order extends Main
@@ -57,17 +57,26 @@ class Order extends Main
         return $criteria;
     }
 
+    private function download(string $export) {
+        if($export === 'docx') {
+            return redirect()->to('/word');
+        }
+        if($export === 'csv' || $export === 'xlsx') {
+            return redirect()->to('/excel?format='.$export);
+        }
+    }
 
     public function index()
     {
+        timer('benchmark');
         $model = model(OrderModel::class);
         helper(['form', 'format']);
 
         $postParams = (object) $this->request->getPost();
         $getParams = (object) $this->request->getGet();
 
-        if(!empty($getParams->method) && $getParams->method === 'create') {
-            $this->create($postParams);
+        if(!empty($getParams->format)) {
+            $this->download($getParams->format);
         }
 
         $criteria = $this->setCriteria($postParams);
@@ -123,6 +132,9 @@ class Order extends Main
             'limitLinks' => $this->pagination->getPerPageLinks($arr),
             'orders' => $model->getOrders($criteria, $limit, $offset),
         ];
+        timer('benchmark');
+
+        $data['time'] = timer()->getElapsedTime('benchmark');
 
         return view('order/index', $data);
     }
