@@ -60,28 +60,4 @@ class OrderModel extends Model
 
         return $query;
     }
-
-    public function createOrder(array $criteria)
-    {
-        if (empty($criteria)) {
-            throw new \Exception('Criteria are empty');
-        }
-
-        $criteria['date'] = date('Y-m-d H:i:s');
-
-        return $this->insert($criteria);
-    }
-    // public function getOrdersWithProductsRequest($uuid): OrderModel
-    // {
-    //     return $this
-    //         ->select('*, orders.uuid o_uuid')
-    //         ->join('order_products', 'orders.id = order_products.order_id')
-    //         ->join('products', 'order_products.id = products.id')
-    //         ->where(['orders.uuid' => $uuid]);
-    // }
-
-    // public function getOrdersWithProducts(string $uuid)
-    // {
-    //     return $this->getOrdersWithProductsRequest($uuid)->findAll();
-    // }
 }

@@ -6,20 +6,28 @@ use Config\Services;
 
 class Pagination
 {
-  private $perPage;
-  private $pagesCount;
-  private $totalRows;
-  private $maxPerPage = 100;
-  private $action;
-  private $activeClass = 'pagination__item--active';
-  private $itemClass = 'pagination__item';
-  private $containerClass = 'pagination';
-  private $pageField = 'page';
+  private $perPage = 5;
+  private $maxLimit = 50;
+  private $pagesCount = 0;
+  private $totalRows = 0;
+
+  private $action = '';
   private $method = 'POST';
+  private $pageField = 'page';
+  private $limitField = 'limit';
+
+  private $containerClass = 'pagination';
+  private $itemClass = 'pagination__item';
+  private $activeClass = 'pagination__item--active';
+  
+
+  private $limitContainerClass = 'limitLinks';
+  private $limitItemClass = 'limitLinks__item';
+  private $limitActiveClass = 'limitLinks__item--active';
 
   public function initialize(string $action, int $perPage, int $totalRows)
   {
-    $max = $this->maxPerPage;
+    $max = $this->maxLimit;
 
     // Initialize basic parameters
     $this->action = $action;
@@ -29,6 +37,41 @@ class Pagination
 
     // Initialize request
     $this->request = Services::request();
+  }
+
+  public function setMaxLimit(int $newLimit) {
+    if($newLimit > 500) {
+      trigger_error('Max Limit is greater than 500. The browser can trouble.', E_USER_WARNING);
+    }
+
+    $maxLimit = $newLimit;
+  }
+
+  public function getMaxLimit() {
+    return $this->maxLimit;
+  }
+
+  private function createPerPageLinks(array $perPageArray) {
+    $action = $this->action . $this->createGetFields();
+
+    $perPageLinks = '<form class="'.$this->limitContainerClass.'" method="POST" action="'.$action.'">';
+
+    $perPageLinks .= $this->createHiddenPostFields();
+    $perPageLinks .= '<input id="limit" type="hidden" name="'.$this->limitField.'" value="'.$this->perPage.'" />';
+    foreach($perPageArray as $perPage) {
+      $activeClass = $this->limitItemClass . ' ' . $this->limitActiveClass;
+      $itemClass = $this->limitItemClass;
+      $class = ($perPage ===   $this->perPage) ? $activeClass : $itemClass;
+      $perPageLinks .= '<input type="submit" class="limit '.$class.'" value="'.$perPage.'" />';
+    }
+
+    $perPageLinks .= '</form>';
+    
+    return $perPageLinks;
+  }
+
+  public function getPerPageLinks(array $array) {
+    return $this->createPerPageLinks($array);
   }
 
   public function getPagesCount()
@@ -47,17 +90,17 @@ class Pagination
     return $offset;
   }
 
-  private function hasPrev($page): bool
+  private function hasPrev($page, $offset = 1): bool
   {
-    if (!is_int($page) || --$page <= 0) {
+    if (!is_int($page) || ($page - $offset) <= 0) {
       return FALSE;
     }
     return TRUE;
   }
 
-  private function hasNext($page): bool
+  private function hasNext($page, $offset = 1): bool
   {
-    if (!is_int($page) || ++$page > $this->pagesCount) {
+    if (!is_int($page) || ($page + $offset) > $this->pagesCount) {
       return FALSE;
     }
 
@@ -70,6 +113,10 @@ class Pagination
     $itemClass = $this->itemClass;
     $activeItemClass = $itemClass . ' ' . $this->activeClass;
 
+    if ($this->hasPrev($page, 2)) {
+      $output .= '<input type="submit" value="' . ($page - 2) . '" class="link ' . $itemClass . '">';
+    }
+
     if ($this->hasPrev($page)) {
       $output .= '<input type="submit" value="' . ($page - 1) . '" class="link ' . $itemClass . '">';
     }
@@ -78,6 +125,10 @@ class Pagination
 
     if ($this->hasNext($page)) {
       $output .= '<input type="submit" value="' . ($page + 1) . '" class="link ' . $itemClass . '">';
+    }
+
+    if ($this->hasNext($page, 2)) {
+      $output .= '<input type="submit" value="' . ($page + 2) . '" class="link ' . $itemClass . '">';
     }
 
     return $output;
@@ -122,6 +173,9 @@ class Pagination
 
   public function getPagination(int $page)
   {
+    if($this->pagesCount === 1) {
+      return;
+    }
     $action = $this->action . $this->createGetFields();
 
     $output = '<form method="' . $this->method . '" action="' . $action . '" class="' . $this->containerClass . '">';

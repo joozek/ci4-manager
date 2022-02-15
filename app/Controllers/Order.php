@@ -9,6 +9,8 @@ use App\Classes\Pagination;
 class Action
 {
     public $search = '/';
+    public $show = '/?method=show';
+    public $remove = '/?method=remove';
     public $json = '/?format=json';
     public $xlsx = '/?format=xlsx';
     public $csv = '/?format=csv';
@@ -77,32 +79,61 @@ class Order extends Main
             $this->export($getParams->format);
         }
 
+
         $criteria = $this->setCriteria($postParams);
         $ordersCount = $model->countOrders($criteria);
 
-        $limit = $postParams->limit ?? 5;
-        $this->pagination->initialize('/', $limit, $ordersCount);
+        $limit = 5;
 
-        $page = (int) ($postParams->page ?? 1);
+        if(!empty($postParams->lastLimit)) {
+            $intLimit = (int) $postParams->lastLimit;
+            $maxLimit = $this->pagination->getMaxLimit();
+            if($intLimit > 0) {
+                $limit = $intLimit;
+                if($intLimit > $maxLimit) {
+                    $limit = $maxLimit;
+                }
+            }
+        }
+
+        if(!empty($postParams->limit)) {
+            $intLimit = (int) $postParams->limit;
+            $maxLimit = $this->pagination->getMaxLimit();
+            if($intLimit > 0) {
+                $limit = $intLimit;
+                if($intLimit > $maxLimit) {
+                    $limit = $maxLimit;
+                }
+            }
+        }
+
+        $this->pagination->initialize('/', (int) $limit, $ordersCount);
+
+        $page = 1;
+
+        if(!empty($postParams->page)) {
+            $intPage = (int) $postParams->page;
+            $maxPage = $this->pagination->getPagesCount();
+            if($page > 0) {
+                $page = $intPage;
+                if($intPage > $maxPage) {
+                    $page = $maxPage;
+                }   
+            }
+        }
         $offset = $this->pagination->getOffset($page);
+
+        $arr = [5, 10, 25, 50];
 
         $data = [
             'action' => new Action(),
             'form' => $postParams,
+            'lastLimit' => $limit,
             'links' => $this->pagination->getPagination($page),
+            'limitLinks' => $this->pagination->getPerPageLinks($arr),
             'orders' => $model->getOrders($criteria, $limit, $offset),
         ];
 
         return view('order/index', $data);
-    }
-
-    public function create()
-    {
-        $model = model(OrderModel::class);
-        helper('form`');
-
-        $criteria = $this->request->getPost();
-
-        $model->createOrder($criteria);
     }
 }

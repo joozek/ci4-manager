@@ -6,6 +6,14 @@ arrows.forEach((arrow) => {
         ev.preventDefault();
         const input = arrow.nextElementSibling;
 
+        const limitValue = document.querySelector('#limit').value;
+
+        const limit = document.createElement('input');
+        limit.setAttribute('type', 'hidden');
+        limit.setAttribute('name', 'limit');
+        limit.setAttribute('value', limitValue);
+        search.prepend(limit);
+
         if (input.value === '') {
             input.value = 'ASC';
             arrow.innerHTML = '<i class="fa fa-sort-down"></i>';
@@ -40,3 +48,15 @@ links.forEach((link) => {
         link.parentElement.submit();
     });
 });
+
+const limitLinks = document.querySelectorAll('.limit');
+const limit = document.querySelector('#limit');
+
+limitLinks.forEach((limitLink) => {
+    limitLink.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        limit.setAttribute('value', ev.target.value);
+
+        limitLink.parentElement.submit();
+    })
+})
