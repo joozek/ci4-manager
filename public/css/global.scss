@@ -197,7 +197,7 @@ body {
 }
 
 .pagination,
-.limitLinks {
+.perPageLinks {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -217,21 +217,25 @@ body {
       opacity: 0.85;
       cursor: pointer;
       color: $cta;
-      font-weight: bold;
     }
   }
 
   &__item--active {
     color: $cta;
+    font-weight: bold;
   }
 }
 
 .pagination {
-  position: absolute;
   left: 0;
 }
 
-.limitLinks {
-  position: absolute;
+.perPageLinks {
   right: 0;
+
+  &__item {
+    border: 0;
+    margin: 10px;
+    padding: 0;
+  }
 }

@@ -12,134 +12,45 @@ class Pagination extends Methods
   public function __construct(array $options)
   {
     // Initialize basic parameters
-    $this->setAction($options['action']);
-    $this->setPerPage($options['perPage']);
-    $this->setTotalRows($options['totalRows']);
+    !empty($options['perPage']) ? $this->setPerPage($options['perPage']) : null;
+    !empty($options['perPageArray']) ? $this->setPerPageArray($options['perPageArray']) : null;
+
+    // Set total rows and max per page limit
+    !empty($options['totalRows']) ? $this->setTotalRows($options['totalRows']) : null;
+    !empty($options['maxLimit']) ? $this->setMaxLimit($options['maxLimit']) : null;
+
+    // Set pagination work method and default action
+    !empty($options['action']) ? $this->setAction($options['action']) : null;
+    !empty($options['method']) ? $this->setMethod($options['method']) : null;
+    
+    // Set page names
+    !empty($options['pageField']) ? $this->setPageField($options['pageField']) : null;
+    !empty($options['pageForm']) ? $this->setPageForm($options['pageForm']) : null;
+    
+    // Set perPage names
+    !empty($options['perPageField']) ? $this->setPerPageField($options['perPageField']) : null;
+    !empty($options['perPageForm']) ? $this->setPerPageForm($options['perPageForm']) : null;
+
+    // Set page classes
+    !empty($options['containerClass']) ? $this->setContainerClass($options['containerClass']) : null;
+    !empty($options['itemClass']) ? $this->setItemClass($options['itemClass']) : null;
+    !empty($options['activeClass']) ? $this->setActiveClass($options['activeClass']) : null;
+
+    // Set perPage classes
+    !empty($options['perPageContainerClass']) ? $this->setContainerClass($options['perPageContainerClass']) : null;
+    !empty($options['perPageItemClass']) ? $this->setItemClass($options['perPageItemClass']) : null;
+    !empty($options['perPageActiveClass']) ? $this->setActiveClass($options['perPageActiveClass']) : null;
+
+    // Set pagesCount
     $this->setPagesCount($this->getTotalRows(), $this->getPerPage());
-    $this->setPerPageArray($options['perPageArray']);
 
     // Initialize request
     $this->request = Services::request();
   }
 
-  private function generateJS(string $formID, string $inputsClass): string {
-    return "
-      <script>
-        const {$inputsClass} = document.querySelectorAll('.{$inputsClass}');
-        const {$formID} = document.querySelector('#{$formID}');
-        window.pagination = document.querySelector('#pagination');
-
-        {$inputsClass}.forEach((input) => {
-          input.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            {$formID}.setAttribute('value', ev.target.value);
-            window.pagination.submit();
-          });
-      });
-      </script>
-    ";
-  }
-
-  private function createPerPageLinks(array $perPageArray) : string
+  public function getOffset(): int
   {
-    $perPageLinks = '<div class="'.$this->getLimitContainerClass().'">';
-
-    $perPageLinks .= '<input id="'.$this->getLimitContainerClass().'" type="hidden" name="'.$this->getLimitField().'" value="'.$this->getPerPage().'" />';
-    foreach($perPageArray as $perPage) {
-      $class = $perPage === $this->getPerPage() ? ($this->getLimitActiveClass(). ' ' .$this->getLimitItemClass()) : $this->getLimitItemClass();
-      $perPageLinks .= '<input type="submit" class="'.$this->getLimitField() .' '.$class.'" value="'.$perPage.'" />';
-    }
-
-    $perPageLinks .= '</div>';
-    
-    return $perPageLinks;
-  }
-
-  public function getOffset(int $page): int
-  {
-    return ($page - 1) * $this->getPerPage();
-  }
-
-  private function hasPrev(int $page, int $offset = 1): bool
-  {
-    if (!is_int($page) || ($page - $offset) <= 0) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  private function hasNext(int $page, int $offset = 1): bool
-  {
-    if (!is_int($page) || ($page + $offset) > $this->getPagesCount()) {
-      return FALSE;
-    }
-
-    return TRUE;
-  }
-
-  private function createLinks(int $page): string
-  {
-    $output = '<div class="' . $this->getContainerClass() . '">';
-
-    if ($page === $this->getPagesCount() && $this->hasPrev($page, 2)) {
-      $output .= '<input type="submit" value="' . ($page - 2) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
-    }
-
-    if ($this->hasPrev($page)) {
-      $output .= '<input type="submit" value="' . ($page - 1) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
-    }
-
-    $output .= '<input type="submit" value="' . $page . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . ' ' . $this->getActiveClass(). '">';
-
-    if ($this->hasNext($page)) {
-      $output .= '<input type="submit" value="' . ($page + 1) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
-    }
-
-    if ($page === 1 && $this->hasNext($page, 2)) {
-      $output .= '<input type="submit" value="' . ($page + 2) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
-    }
-
-    $output .= '</div>';
-
-    return $output;
-  }
-
-  private function createHiddenPostFields(string $exclude = null): string
-  {
-    $fields = $this->request->getPost();
-
-    $output = '';
-
-    foreach ($fields as $key => $field) {
-      if($key === $exclude) continue;
-      $output .= '<input type="hidden" name="' . $key . '" value="' . $field . '" />';
-    }
-
-    return $output;
-  }
-
-
-  private function createGetFields()
-  {
-    $fields = $this->request->getGet();
-    $fieldsCount = count($fields);
-    if ($fieldsCount === 0) {
-      return;
-    }
-
-    $getString = '?';
-
-    $i = 1;
-    foreach ($fields as $key => $field) {
-      if ($i === $fieldsCount) {
-        $getString .= $key . '=' . $field;
-        continue;
-      }
-      $getString .= $key . '=' . $field . '&';
-      $i++;
-    }
-
-    return $getString;
+    return ($this->getPage() - 1) * $this->getPerPage();
   }
 
   public function getPagination(int $page)
@@ -148,9 +59,8 @@ class Pagination extends Methods
     $output .= $this->createHiddenPostFields($this->getPageField());
     $output .= '<input id="' . $this->getPageForm() .'" type="hidden" name="' . $this->getPageField() . '" value="'.$this->getPage().'">';
     $output .= $this->createLinks($page);
-    $output .= $this->generateJS($this->getPageForm(), $this->getPageField());
+    $output .= $this->getPaginationJS($this->getPageForm(), $this->getPageField());
     $output .= $this->createPerPageLinks($this->getPerPageArray());
-    $output .= $this->generateJS($this->getLimitForm(), $this->getLimitField());
     $output .= '</form>';
 
     return $output;

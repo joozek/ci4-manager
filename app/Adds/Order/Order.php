@@ -12,6 +12,7 @@ abstract class Order extends Main
 
     protected function initialize() {
         $this->model = model(OrderModel::class);
+        
         $this->postParams = (object) $this->request->getPost();
 
         $this->criteria = $this->setCriteria($this->postParams);

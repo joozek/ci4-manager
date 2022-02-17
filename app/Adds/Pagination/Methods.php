@@ -17,16 +17,16 @@ class Methods {
   private $pageField = 'page';
   private $pageForm = 'pages';
 
-  private $limitField = 'limit';
-  private $limitForm = 'limitLinks';
+  private $perPageField = 'perPage';
+  private $perPageForm = 'perPageLinks';
 
   private $containerClass = 'pagination';
   private $itemClass = 'pagination__item';
   private $activeClass = 'pagination__item--active';
 
-  private $limitContainerClass = 'limitLinks';
-  private $limitItemClass = 'limitLinks__item';
-  private $limitActiveClass = 'limitLinks__item--active';
+  private $perPageContainerClass = 'perPageLinks';
+  private $perPageItemClass = 'perPageLinks__item';
+  private $perPageActiveClass = 'perPageLinks__item--active';
 
   public function getPage(): int {
     return $this->page;
@@ -58,7 +58,6 @@ class Methods {
   }
 
   protected function getPerPageArray(): array {
-    if(empty($this->perPageArray)) return [$this->perPage];
     return $this->perPageArray;
   }
 
@@ -67,7 +66,7 @@ class Methods {
     $this->perPageArray = $arr;
   }
 
-  protected function getPagesCount(): int {
+  public function getPagesCount(): int {
     return $this->pagesCount;
   }
 
@@ -76,7 +75,7 @@ class Methods {
     $this->pagesCount = ceil($totalRows / $perPage);
   }
   
-  protected function getTotalRows(): int {
+  public function getTotalRows(): int {
     return $this->totalRows;
   }
 
@@ -85,7 +84,7 @@ class Methods {
     $this->totalRows = $totalRows;
   }
 
-  protected function getMaxLimit(): int {
+  public function getMaxLimit(): int {
     return $this->maxLimit;
   }
 
@@ -94,7 +93,7 @@ class Methods {
     $this->maxLimit = $maxLimit;
   }
   
-  protected function getAction(): string
+  public function getAction(): string
   {
     return $this->action;
   }
@@ -105,7 +104,7 @@ class Methods {
     $this->action = $action;
   }
 
-  protected function getMethod(): string
+  public function getMethod(): string
   {
     return $this->method;
   }
@@ -116,7 +115,7 @@ class Methods {
     $this->method = $method;
   }
 
-  protected function getPageField(): string
+  public function getPageField(): string
   {
     return $this->pageField;
   }
@@ -127,7 +126,7 @@ class Methods {
     $this->pageField = $pageField;
   }
 
-  protected function getPageForm(): string
+  public function getPageForm(): string
   {
     return $this->pageForm;
   }
@@ -138,28 +137,27 @@ class Methods {
     $this->pageForm = $pageForm;
   }
 
-  protected function getLimitField(): string
+  public function getPerPageField(): string
   {
-    return $this->limitField;
+    return $this->perPageField;
   }
 
-  protected function setLimitField(string $limitField): void
+  protected function setPerPageField(string $perPageField): void
   {
-    if(empty($limitField)) return;
-    $this->limitField = $limitField;
+    if(empty($perPageField)) return;
+    $this->perPageField = $perPageField;
   }
 
-  public function getLimitForm(): string
+  public function getPerPageForm(): string
   {
-    return $this->limitForm;
+    return $this->perPageForm;
   }
 
-  protected function setLimitForm(string $limitForm): void
+  protected function setPerPageForm(string $perPageForm): void
   {
-    if(empty($limitForm)) return;
-    $this->limitForm = $limitForm;
+    if(empty($perPageForm)) return;
+    $this->perPageForm = $perPageForm;
   }
-
 
   protected function getContainerClass(): string
   {
@@ -171,19 +169,17 @@ class Methods {
     $this->containerClass = $containerClass;
   }
 
-  protected function getItemClass(): string
+  public function getItemClass(): string
   {
     return $this->itemClass;
   }
-
 
   protected function setItemClass(string $itemClass): void
   {
     $this->itemClass = $itemClass;
   }
 
-
-  protected function getActiveClass(): string
+  public function getActiveClass(): string
   {
     return $this->activeClass;
   }
@@ -193,33 +189,167 @@ class Methods {
     $this->activeClass = $activeClass;
   }
 
-  protected function getLimitContainerClass(): string
+  public function getPerPageContainerClass(): string
   {
-    return $this->limitContainerClass;
+    return $this->perPageContainerClass;
   }
 
-  protected function setLimitContainerClass(string $limitContainerClass): void
+  protected function setPerPageContainerClass(string $perPageContainerClass): void
   {
-    $this->limitContainerClass = $limitContainerClass;
+    $this->perPageContainerClass = $perPageContainerClass;
   }
 
-  protected function getLimitItemClass(): string
+  public function getPerPageItemClass(): string
   {
-    return $this->limitItemClass;
+    return $this->perPageItemClass;
   }
 
-  protected function setLimitItemClass(string $limitItemClass): void
+  protected function setPerPageItemClass(string $perPageItemClass): void
   {
-    $this->limitItemClass = $limitItemClass;
+    $this->perPageItemClass = $perPageItemClass;
   }
 
-  protected function getLimitActiveClass(): string
+  public function getPerPageActiveClass(): string
   {
-    return $this->limitActiveClass;
+    return $this->perPageActiveClass;
   }
 
-  protected function setLimitActiveClass(string $limitActiveClass): void
+  protected function setPerPageActiveClass(string $perPageActiveClass): void
   {
-    $this->limitActiveClass = $limitActiveClass;
+    $this->perPageActiveClass = $perPageActiveClass;
+  }
+
+  protected function getPaginationJS(string $formID, string $inputsClass): string {
+    return "
+      <script>
+        const {$inputsClass} = document.querySelectorAll('.{$inputsClass}');
+        const {$formID} = document.querySelector('#{$formID}');
+        window.pagination = document.querySelector('#pagination');
+
+        {$inputsClass}.forEach((input) => {
+          input.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            {$formID}.setAttribute('value', ev.target.value);
+            window.pagination.submit();
+          });
+      });
+      </script>
+    ";
+  }
+
+  protected function getSelectJS($formID) {
+    return "
+      <script>
+        const select = document.querySelector('select.button');
+        const {$formID} = document.querySelector('#{$formID}');
+
+        select.addEventListener('change', (ev) => {
+          ev.preventDefault();
+          {$formID}.setAttribute('value', select.value);
+          window.pagination.submit();
+        });
+      </script>
+    ";
+  }
+
+  protected function createPerPageLinks(array $perPageArray) : string
+  {
+    if(empty($perPageArray)) {
+      return '';
+    }
+    $perPageLinks = '<div class="'.$this->getPerPageContainerClass().'"><input id="'.$this->getPerPageContainerClass().'" type="hidden" name="'.$this->getPerPageField().'" value="'.$this->getPerPage().'" />';
+
+    $perPageLinks .= '<select class="button">';
+
+    foreach($perPageArray as $pP) {
+      $perPageLinks .= '<option ' .($pP === $this->getPerPage() ? 'selected' : null). ' value="'.$pP.'">'.$pP.'</option>';
+    }
+
+    $perPageLinks .= '</select></div>';
+
+    $perPageLinks .= $this->getSelectJS($this->getPerPageForm());
+
+    return $perPageLinks;
+  }
+
+  protected function hasPrev(int $page, int $offset = 1): bool
+  {
+    if (!is_int($page) || ($page - $offset) <= 0) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  protected function hasNext(int $page, int $offset = 1): bool
+  {
+    if (!is_int($page) || ($page + $offset) > $this->getPagesCount()) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  protected function createLinks(int $page): string
+  {
+    $output = '<div class="' . $this->getContainerClass() . '">';
+
+    if ($page === $this->getPagesCount() && $this->hasPrev($page, 2)) {
+      $output .= '<input type="submit" value="' . ($page - 2) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
+    }
+
+    if ($this->hasPrev($page)) {
+      $output .= '<input type="submit" value="' . ($page - 1) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
+    }
+
+    $output .= '<input type="submit" value="' . $page . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . ' ' . $this->getActiveClass(). '">';
+
+    if ($this->hasNext($page)) {
+      $output .= '<input type="submit" value="' . ($page + 1) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
+    }
+
+    if ($page === 1 && $this->hasNext($page, 2)) {
+      $output .= '<input type="submit" value="' . ($page + 2) . '" class="'. $this->getPageField() . ' ' . $this->getItemClass() . '">';
+    }
+
+    $output .= '</div>';
+
+    return $output;
+  }
+
+  protected function createHiddenPostFields(string $exclude = null): string
+  {
+    $fields = $this->request->getPost();
+
+    $output = '';
+
+    foreach ($fields as $key => $field) {
+      if($key === $exclude) continue;
+      $output .= '<input type="hidden" name="' . $key . '" value="' . $field . '" />';
+    }
+
+    return $output;
+  }
+
+  protected function createGetFields()
+  {
+    $fields = $this->request->getGet();
+    $fieldsCount = count($fields);
+    if ($fieldsCount === 0) {
+      return;
+    }
+
+    $getString = '?';
+
+    $i = 1;
+    foreach ($fields as $key => $field) {
+      if ($i === $fieldsCount) {
+        $getString .= $key . '=' . $field;
+        continue;
+      }
+      $getString .= $key . '=' . $field . '&';
+      $i++;
+    }
+
+    return $getString;
   }
 }

@@ -11,7 +11,7 @@
     <div id="container">
         <form id="search" action="<?= $action->search ?>" method="post">
             <div class="search list">
-                <input type="hidden" name="limit" value="<?= getIfPropertyExists($form, 'limit') ?>" />
+                <input type="hidden" name="<?= $perPageField ?>" value="<?= getIfPropertyExists($form, 'perPage') ?>" />
                 <input type="hidden" name="page" value="<?= getIfPropertyExists($form, 'page') ?>" />
                 <input type="search" name="uuid" value="<?= getIfPropertyExists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
                 <input type="search" name="status" + value="<?= getIfPropertyExists($form, 'status') ?>" class="search__input" placeholder="Search status" />

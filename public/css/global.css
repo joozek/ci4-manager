@@ -227,7 +227,7 @@ body {
 }
 
 .pagination,
-.limitLinks {
+.perPageLinks {
   position: absolute;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -241,7 +241,7 @@ body {
 }
 
 .pagination__item,
-.limitLinks__item {
+.perPageLinks__item {
   border: 1px solid #14bdeb;
   outline: none;
   text-align: center;
@@ -252,26 +252,30 @@ body {
 }
 
 .pagination__item:hover, .pagination__item:focus,
-.limitLinks__item:hover,
-.limitLinks__item:focus {
+.perPageLinks__item:hover,
+.perPageLinks__item:focus {
   opacity: 0.85;
   cursor: pointer;
+  color: #14bdeb;
+}
+
+.pagination__item--active,
+.perPageLinks__item--active {
   color: #14bdeb;
   font-weight: bold;
 }
 
-.pagination__item--active,
-.limitLinks__item--active {
-  color: #14bdeb;
-}
-
 .pagination {
-  position: absolute;
   left: 0;
 }
 
-.limitLinks {
-  position: absolute;
+.perPageLinks {
   right: 0;
+}
+
+.perPageLinks__item {
+  border: 0;
+  margin: 10px;
+  padding: 0;
 }
 /*# sourceMappingURL=global.css.map */

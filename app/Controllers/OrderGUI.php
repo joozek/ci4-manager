@@ -16,29 +16,29 @@ class OrderGUI extends Order
         $this->initialize();
         $ordersCount = $this->getOrdersCount();
 
-        $perPage = !empty($this->postParams->limit) ? (int) $this->postParams->limit : 10;
+        $postPerPage = !empty($this->postParams->perPage) ? (int) $this->postParams->perPage : 10;
+        $postPage = !empty($this->postParams->page) ? (int) $this->postParams->page : 1;
 
         $options = [
             'action' => '/',
-            'perPage' => $perPage,
+            'perPage' => $postPerPage,
             'totalRows' => $ordersCount,
-            'perPageArray' => [5, 10, 25, 50],
+            'perPageArray' => [5, 10, 15, 20, 25],
         ];
 
         $paginator = new Pagination($options);
-
-        $postPage = !empty($this->postParams->page) ? (int) $this->postParams->page : 1;
         $paginator->setPage($postPage);
 
-        $page = $paginator->getPage();
-        $limit = $paginator->getPerPage();
-        $offset = $paginator->getOffset($page);
+        $perPage = $paginator->getPerPage();
+        $offset = $paginator->getOffset();
 
         $guiData = [
             'action' => new OrderAction(),
+            'perPageField' => $paginator->getPerPageField(),
+            'perPage' => $perPage, 
             'form' => $this->postParams,
-            'orders' => $this->getOrders($limit, $offset),
-            'pagination' => $paginator->getPagination($page),
+            'orders' => $this->getOrders($perPage, $offset),
+            'pagination' => $paginator->getPagination($paginator->getPage()),
         ];
 
         return view('order/index', $guiData);
