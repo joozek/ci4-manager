@@ -117,10 +117,8 @@
                 <h2 class="any">Any results.</h1>
             </div>
         <?php endif; ?>
-        <?php /*Created in: <?= $time ?>s */?>
         <div class="links">
-        <?= $links ?>
-        <?= $limitLinks ?>
+        <?= $pagination ?>
         </div>
         <div class="buttons">
             <form method="POST" action="<?= $action->json ?>">

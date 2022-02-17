@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Classes\OrderSearchCriteria;
+use App\Adds\Order\OrderSearchCriteria;
 
 class OrderModel extends Model
 {
@@ -15,9 +15,8 @@ class OrderModel extends Model
     {
         $request = $this->select(['uuid', 'status', 'client_id', 'shipment', 'payment', 'shipping_total']);
 
-
         if (isset($criteria)) {
-            //SEARCH CRIT
+            //SEARCH CRITERIA
             if (!empty(($criteria->getUUID()))) {
                 $request->like('uuid', $criteria->getUUID());
             }
@@ -30,7 +29,7 @@ class OrderModel extends Model
             if (!empty($criteria->getShipment())) {
                 $request->like('shipment', $criteria->getShipment());
             }
-
+            
             //ORDER CRITERIA
             if (!empty($criteria->getSortUUID())) {
                 $request->orderBy('uuid', $criteria->getSortUUID());

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes;
+namespace App\Adds\Order;
 
 class OrderCriteria
 {
@@ -8,6 +8,9 @@ class OrderCriteria
   private $status = null;
   private $shippingTotal = null;
   private $shipment = null;
+  private $payment = null;
+  private $client_id = null;
+  private $date = null;
 
   public function getUUID()
   {

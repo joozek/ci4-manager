@@ -1,1 +1,2 @@
-<?php echo json_encode($orders);
+<?php header('Content-Type: application/json');
+echo json_encode($orders);

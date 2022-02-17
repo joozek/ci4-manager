@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes;
+namespace App\Adds\Order;
 
 class OrderSearchCriteria extends OrderCriteria
 {

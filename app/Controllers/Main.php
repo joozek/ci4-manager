@@ -9,6 +9,8 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use App\Classes\OrderSearchCriteria;
+
 /**
  * Class BaseController
  *
@@ -46,7 +48,6 @@ class Main extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
-
 
         // E.g.: $this->session = \Config\Services::session();
     }
