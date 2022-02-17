@@ -11,20 +11,24 @@ class OrderGUI extends Order
 {
     public function index() 
     {
+        helper(['form', 'object', 'console']);
+
         $this->initialize();
         $ordersCount = $this->getOrdersCount();
 
+        $perPage = !empty($this->postParams->limit) ? (int) $this->postParams->limit : 10;
+
         $options = [
             'action' => '/',
-            'perPage' => $this->postParams->limit ?? 10,
+            'perPage' => $perPage,
             'totalRows' => $ordersCount,
             'perPageArray' => [5, 10, 25, 50],
         ];
 
         $paginator = new Pagination($options);
 
-        $page = !empty($this->postParams->page) ? (int) $this->postParams->page : 1;
-        $paginator->setPage($page);
+        $postPage = !empty($this->postParams->page) ? (int) $this->postParams->page : 1;
+        $paginator->setPage($postPage);
 
         $page = $paginator->getPage();
         $limit = $paginator->getPerPage();
@@ -32,7 +36,6 @@ class OrderGUI extends Order
 
         $guiData = [
             'action' => new OrderAction(),
-            'lastLimit' => $limit,
             'form' => $this->postParams,
             'orders' => $this->getOrders($limit, $offset),
             'pagination' => $paginator->getPagination($page),

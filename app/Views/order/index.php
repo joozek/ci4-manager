@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -12,13 +11,14 @@
     <div id="container">
         <form id="search" action="<?= $action->search ?>" method="post">
             <div class="search list">
-                <input type="hidden" name="lastLimit" value="<?= $lastLimit ?>" />
-                <input type="search" name="uuid" value="<?= show_if_exists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
-                <input type="search" name="status" + value="<?= show_if_exists($form, 'status') ?>" class="search__input" placeholder="Search status" />
-                <input type="search" name="shipping_total" value="<?= show_if_exists($form, 'shipping_total') ?>" class="search__input" placeholder="Search total shipping" />
-                <input type="search" name="shipment" value="<?= show_if_exists($form, 'shipment') ?>" class="search__input" placeholder="Search shipment" />
+                <input type="hidden" name="limit" value="<?= getIfPropertyExists($form, 'limit') ?>" />
+                <input type="hidden" name="page" value="<?= getIfPropertyExists($form, 'page') ?>" />
+                <input type="search" name="uuid" value="<?= getIfPropertyExists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
+                <input type="search" name="status" + value="<?= getIfPropertyExists($form, 'status') ?>" class="search__input" placeholder="Search status" />
+                <input type="search" name="shipping_total" value="<?= getIfPropertyExists($form, 'shipping_total') ?>" class="search__input" placeholder="Search total shipping" />
+                <input type="search" name="shipment" value="<?= getIfPropertyExists($form, 'shipment') ?>" class="search__input" placeholder="Search shipment" />
                 <input type="submit" value="Search" class="search__button" />
-            </div>
+            </div> 
             <div class="list header">
                 <div class="list__header">
                     <h3>UUID</h3>
@@ -33,7 +33,7 @@
                         }
                         ?>
                     </button>
-                    <input type="hidden" class="soir" name="sort_uuid" value="<?= ($form->sort_uuid ?? '') ?>" />
+                    <input type="hidden" name="sort_uuid" value="<?= ($form->sort_uuid ?? '') ?>" />
                 </div>
                 <div class="list__header">
                     <h3>Status</h3>
@@ -48,7 +48,7 @@
                         }
                         ?>
                     </button>
-                    <input type="hidden" class="soir" name="sort_status" value="<?= ($form->sort_status ?? '') ?>" />
+                    <input type="hidden" name="sort_status" value="<?= ($form->sort_status ?? '') ?>" />
                 </div>
                 <div class="list__header">
                     <h3>Shipping Total</h3>
@@ -63,7 +63,7 @@
                         }
                         ?>
                     </button>
-                    <input type="hidden" class="soir" name="sort_shipping_total" value="<?= ($form->sort_shipping_total ?? '') ?>" />
+                    <input type="hidden" name="sort_shipping_total" value="<?= ($form->sort_shipping_total ?? '') ?>" />
                 </div>
                 <div class="list__header">
                     <h3>Shipment</h3>
@@ -78,7 +78,7 @@
                         }
                         ?>
                     </button>
-                    <input type="hidden" class="soir" name="sort_shipment" value="<?= ($form->sort_shipment ?? '') ?>" />
+                    <input type="hidden" name="sort_shipment" value="<?= ($form->sort_shipment ?? '') ?>" />
                 </div>
                 <div class="list__btns">
                     <h3>Manage</h3>
@@ -89,7 +89,7 @@
             <?php foreach ($orders as $o) : ?>
                 <div class="list">
                     <p>
-                        <?= reduceStringToLength($o->uuid, 20) ?>
+                        <?= $o->uuid ?>
                     </p>
                     <p>
                         <?= str_replace(['ORDER_', '_'], ' ', $o->status) ?>

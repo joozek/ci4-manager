@@ -23,6 +23,21 @@ class OrderSearchCriteria extends OrderCriteria
     return $this->sortUUID;
   }
 
+  public function getSortStatus()
+  {
+    return $this->sortStatus;
+  }
+
+  public function getSortShippingTotal()
+  {
+    return $this->sortShippingTotal;
+  }
+
+  public function getSortShipment()
+  {
+    return $this->sortShipment;
+  }
+
   public function setSortUUID(string $UUID = null): void
   {
     if (!$this->isValidSortType($UUID)) {
@@ -30,11 +45,6 @@ class OrderSearchCriteria extends OrderCriteria
     }
 
     $this->sortUUID = $UUID;
-  }
-
-  public function getSortStatus()
-  {
-    return $this->sortStatus;
   }
 
   public function setSortStatus(string $status = null): void
@@ -46,11 +56,6 @@ class OrderSearchCriteria extends OrderCriteria
     $this->sortStatus = $status;
   }
 
-  public function getSortShippingTotal()
-  {
-    return $this->sortShippingTotal;
-  }
-
   public function setSortShippingTotal(string $shippingTotal = null): void
   {
     if (!$this->isValidSortType($shippingTotal)) {
@@ -58,11 +63,6 @@ class OrderSearchCriteria extends OrderCriteria
     }
 
     $this->sortShippingTotal = $shippingTotal;
-  }
-
-  public function getSortShipment()
-  {
-    return $this->sortShipment;
   }
 
   public function setSortShipment(string $shipment = null): void

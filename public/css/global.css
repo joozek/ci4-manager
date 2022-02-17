@@ -9,10 +9,12 @@
 
 ::-moz-selection {
   background-color: #14bdeb;
+  color: #fcfcfc;
 }
 
 ::selection {
   background-color: #14bdeb;
+  color: #fcfcfc;
 }
 
 body {
@@ -37,24 +39,6 @@ body {
   font: 13px/20px normal Helvetica, Arial, sans-serif;
 }
 
-#error {
-  padding: 50px;
-  margin: 10px;
-  border: 1px solid white;
-  border-radius: 10px;
-  -webkit-box-shadow: 0 0 8px white;
-          box-shadow: 0 0 8px white;
-}
-
-#error h1 {
-  margin-bottom: 30px;
-}
-
-#error p {
-  margin-top: 10px;
-  font-size: 16px;
-}
-
 .arrow {
   border: 1px solid transparent;
   border-radius: 50%;
@@ -69,12 +53,6 @@ body {
   background: #72d7f3;
   color: #0d566a;
   cursor: pointer;
-}
-
-.fa::before {
-  -webkit-transition: color 0.15s ease-in-out;
-  transition: color 0.15s ease-in-out;
-  color: #fcfcfc;
 }
 
 .search {

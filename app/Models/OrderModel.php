@@ -11,38 +11,23 @@ class OrderModel extends Model
     protected $allowedFields = ['uuid', 'status', 'shipment', 'payment', 'shipping_total', 'date', 'client_id'];
     protected $returnType = 'object';
 
-    public function getOrdersRequest(OrderSearchCriteria $criteria = null): OrderModel
+    public function getOrdersRequest(OrderSearchCriteria $criteria = null): Model
     {
-        $request = $this->select(['uuid', 'status', 'client_id', 'shipment', 'payment', 'shipping_total']);
+        
+        $request = $this->select(['uuid', 'status', 'shipping_total', 'shipment']);
 
         if (isset($criteria)) {
-            //SEARCH CRITERIA
-            if (!empty(($criteria->getUUID()))) {
-                $request->like('uuid', $criteria->getUUID());
-            }
-            if (!empty($criteria->getStatus())) {
-                $request->like('status', $criteria->getStatus());
-            }
-            if (!empty($criteria->getShippingTotal())) {
-                $request->like('shipping_total', $criteria->getShippingTotal());
-            }
-            if (!empty($criteria->getShipment())) {
-                $request->like('shipment', $criteria->getShipment());
-            }
+            //Get search criteria
+            !empty($criteria->getUUID()) ? $request->like('uuid', $criteria->getUUID()) : null;
+            !empty($criteria->getStatus()) ? $request->like('status', $criteria->getStatus()) : null;
+            !empty($criteria->getShippingTotal()) ? $request->like('shipping_total', $criteria->getShippingTotal()) : null;
+            !empty($criteria->getShipment()) ? $request->like('shipment', $criteria->getShipment()) : null;
             
-            //ORDER CRITERIA
-            if (!empty($criteria->getSortUUID())) {
-                $request->orderBy('uuid', $criteria->getSortUUID());
-            }
-            if (!empty($criteria->getSortStatus())) {
-                $request->orderBy('status', $criteria->getSortStatus());
-            }
-            if (!empty($criteria->getSortShippingTotal())) {
-                $request->orderBy('shipping_total', $criteria->getSortShippingTotal());
-            }
-            if (!empty($criteria->getSortShipment())) {
-                $request->orderBy('shipment', $criteria->getSortShipment());
-            }
+            //Get sort criteria
+            !empty($criteria->getSortUUID()) ? $request->orderBy('uuid', $criteria->getSortUUID()) : null;
+            !empty($criteria->getSortStatus()) ? $request->orderBy('status', $criteria->getSortStatus()) : null;
+            !empty($criteria->getSortShippingTotal()) ? $request->orderBy('shipping_total', $criteria->getSortShippingTotal()) : null;
+            !empty($criteria->getSortShipment()) ? $request->orderBy('shipment', $criteria->getSortShipment()) : null;
         }
 
         return $request;

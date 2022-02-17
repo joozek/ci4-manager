@@ -11,8 +11,6 @@ abstract class Order extends Main
     private $defaultOffset = 0;
 
     protected function initialize() {
-        helper(['form', 'format']);
-
         $this->model = model(OrderModel::class);
         $this->postParams = (object) $this->request->getPost();
 
@@ -23,42 +21,26 @@ abstract class Order extends Main
     {
         $criteria = new OrderSearchCriteria();
 
-        // SEARCH CRITERIA
-        if(!empty($params->uuid)) {
-            $criteria->setUUID($params->uuid);
-        }
-        if(!empty($params->status)) {
-            $criteria->setStatus($params->status);
-        }
-        if(!empty($params->shipping_total)) {
-            $criteria->setShippingTotal($params->shipping_total);
-        }
-        if(!empty($params->shipment)) {
-            $criteria->setShipment($params->shipment);
-        }
+        // Set search criteria
+        !empty($params->uuid) ? $criteria->setUUID($params->uuid) : null;
+        !empty($params->status) ? $criteria->setStatus($params->status) : null;
+        !empty($params->shipping_total) ? $criteria->setShippingTotal($params->shipping_total) : null;
+        !empty($params->shipment) ? $criteria->setShipment($params->shipment) : null;
 
-        // SORT CRITERIA
-        if(!empty($params->sort_uuid)) {
-            $criteria->setSortUUID($params->sort_uuid);
-        }
-        if(!empty($params->sort_status)) {
-            $criteria->setSortStatus($params->sort_status);
-        }
-        if(!empty($params->sort_shipping_total)) {
-            $criteria->setSortShippingTotal($params->sort_shipping_total);
-        }
-        if(!empty($params->sort_shipment)) {
-            $criteria->setSortShipment($params->sort_shipment);
-        }
+        // Set sort criteria
+        !empty($params->sort_uuid) ? $criteria->setSortUUID($params->sort_uuid) : null;
+        !empty($params->sort_status) ? $criteria->setSortStatus($params->sort_status) : null;
+        !empty($params->sort_shipping_total) ? $criteria->setSortShippingTotal($params->sort_shipping_total) : null;
+        !empty($params->sort_shipment) ? $criteria->setSortShipment($params->sort_shipment) : null;
 
         return $criteria;
     }
 
-    protected function getOrdersCount() {
+    protected function getOrdersCount(): int {
         return $this->model->countOrders($this->criteria);
     }
 
-    protected function getOrders($limit, $offset)
+    protected function getOrders($limit, $offset): array
     {
         return $this->model->getOrders($this->criteria, $limit, $offset);
     }
