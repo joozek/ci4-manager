@@ -120,20 +120,7 @@
         <div class="links">
         <?= $pagination ?>
         </div>
-        <div class="buttons">
-            <form method="POST" action="<?= $action->json ?>">
-                <button class="button export">Export (.json)</button>
-            </form>
-            <form method="POST" action="<?= $action->xlsx ?>">
-                <button class="button export">Export (.xlsx)</button>
-            </form>
-            <form method="POST" action="<?= $action->csv ?>">
-                <button class="button export">Export (.csv)</button>
-            </form>
-            <form method="POST" action="<?= $action->docx ?>">
-                <button class="button export">Export (.docx)</button>
-            </form>
-        </div>
+        <?= $export ?>
     </div>
     <script src="js/script.js"></script>
 </body>

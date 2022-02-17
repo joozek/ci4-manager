@@ -6,7 +6,7 @@ use App\Adds\Order\Order;
 use App\Adds\Order\OrderAction;
 
 use App\Adds\Pagination;
-
+use App\Adds\ExportButtons;
 class OrderGUI extends Order
 {
     public function index() 
@@ -29,6 +29,8 @@ class OrderGUI extends Order
         $paginator = new Pagination($options);
         $paginator->setPage($postPage);
 
+        $export = new ExportButtons();
+
         $perPage = $paginator->getPerPage();
         $offset = $paginator->getOffset();
 
@@ -39,6 +41,7 @@ class OrderGUI extends Order
             'form' => $this->postParams,
             'orders' => $this->getOrders($perPage, $offset),
             'pagination' => $paginator->getPagination($paginator->getPage()),
+            'export' => $export->getExportButtons(),
         ];
 
         return view('order/index', $guiData);

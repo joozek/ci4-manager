@@ -10,7 +10,8 @@ abstract class Order extends Main
     private $defaultLimit = 50;
     private $defaultOffset = 0;
 
-    protected function initialize() {
+    protected function initialize() 
+    {
         $this->model = model(OrderModel::class);
         
         $this->postParams = (object) $this->request->getPost();
@@ -37,7 +38,8 @@ abstract class Order extends Main
         return $criteria;
     }
 
-    protected function getOrdersCount(): int {
+    protected function getOrdersCount(): int 
+    {
         return $this->model->countOrders($this->criteria);
     }
 
