@@ -62,12 +62,9 @@ class Word extends Order
       $orders = $this->getOrders($limit, 0);
 
       $this->createOrdersTable($orders);
-
-      $data = [
-          'response' => $this->response,
-          'writer' => $this->writer,
-      ];
-
-      return view('order/word', $data);
-  }
+        
+      $this->response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.docx"');
+      $this->writer->save('php://output');
+    }
 }
