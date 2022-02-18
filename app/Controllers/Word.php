@@ -25,6 +25,8 @@ class Word extends Order
         'bold' => true,
         'fontSize' => 20,
     ];
+    private $section;
+    private $writer;
 
     public function __construct()
     {
@@ -33,28 +35,24 @@ class Word extends Order
         $this->writer = IOFactory::createWriter($this->phpWord, 'Word2007');
     }
 
-    private function createOrdersTable(array $arr)
+    private function createOrdersTable(array $orders): void
     {
         $this->phpWord->addTableStyle('orders', $this->tableStyles);
         $table = $this->section->addTable('orders');
         $table->addRow($this->rowSize, $this->rowStyles);
 
-        foreach ($arr[0] as $key => $value) {
+        foreach ($orders[0] as $key => $value) {
             $fieldName = ucwords(str_replace('_', ' ', $key));
             $table->addCell($this->colSize)->addText($fieldName, $this->textStyles);
         }
 
-        for ($i = 0; $i < count($arr); $i++) {
+        for ($i = 0; $i < count($orders); $i++) {
             $table->addRow($this->rowSize, $this->rowStyles);
-            $rowKeys = get_object_vars($arr[$i]);
+            $rowKeys = get_object_vars($orders[$i]);
             foreach ($rowKeys as $rowKey) {
                 $table->addCell($this->colSize)->addText($rowKey);
             }
         }
-    }
-  
-    private function getMime() {
-      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     }
 
     public function index()
@@ -65,8 +63,11 @@ class Word extends Order
 
       $this->createOrdersTable($orders);
 
-      $this->response->setHeader('Content-Type',  $this->getMime());
-      $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.docx"');
-      $this->writer->save('php://output');
+      $data = [
+          'response' => $this->response,
+          'writer' => $this->writer,
+      ];
+
+      return view('order/word', $data);
   }
 }

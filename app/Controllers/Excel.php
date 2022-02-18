@@ -12,6 +12,8 @@ class Excel extends Order
 {
     private $spreadsheet;
     private $sheet;
+    private $xlsxWriter;
+    private $csvWriter;
 
     public function __construct()
     {
@@ -21,7 +23,7 @@ class Excel extends Order
         $this->csvWriter = new Csv($this->spreadsheet);
     }
 
-    private function createSpreadSheet(array $arr)
+    private function createOrdersTable(array $arr): void
     {
         $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -60,10 +62,15 @@ class Excel extends Order
       $limit = $this->getOrdersCount();
       $orders = $this->getOrders($limit, 0);
 
-      $this->createSpreadSheet($orders);
+      $this->createOrdersTable($orders);
 
-      $this->response->setHeader('Content-Type', $this->getMime($method));
-      $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.'.$method.'"');
-      $this->{($method ?? 'xlsx') . 'Writer'}->save("php://output");
+      $data = [
+        'response' => $this->response,
+        'method' => $method,
+        'mime' => $this->getMime($method),
+        $method . 'Writer' => $this->{$method . 'Writer'},
+      ];
+
+      return view('order/excel', $data);
     }
 }

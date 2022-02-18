@@ -44,6 +44,6 @@ class OrderGUI extends Order
             'export' => $export->getExportButtons(),
         ];
 
-        return view('order/index', $guiData);
+        return view('order/gui', $guiData);
     }
 }

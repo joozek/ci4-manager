@@ -6,15 +6,11 @@ use App\Adds\Order\Order;
 
 class JSON extends Order {
   public function index() {
-    helper('console');
     $this->initialize();
 
-    $limit = (int) $this->getOrdersCount();
+    $limit = $this->getOrdersCount();
+    $orders = $this->getOrders($limit, 0);
 
-    $data = [
-      'orders' => $this->getOrders($limit, 0),
-    ];
-
-    return $this->response->setJSON($data);
+    return $this->response->setJSON($orders);
   }
-}
+} 
