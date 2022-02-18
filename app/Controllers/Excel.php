@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Adds\Order\Order;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Excel extends Order
@@ -19,8 +18,7 @@ class Excel extends Order
   {
       $this->spreadsheet = new Spreadsheet();
       $this->sheet = $this->spreadsheet->getActiveSheet();
-      $this->xlsxWriter = new Xlsx($this->spreadsheet);
-      $this->csvWriter = new Csv($this->spreadsheet);
+      $this->writer = new Xlsx($this->spreadsheet);
   }
 
   private function createOrdersTable(array $arr): void
@@ -40,14 +38,6 @@ class Excel extends Order
     $this->sheet->fromArray($data, NULL, 'A1');
   }
 
-  private function getMime(string $method): string {
-    if($method === 'csv') {
-      return 'text/csv';
-    }
-
-    return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-  }
-
   public function index()
   {
     helper('file');
@@ -60,8 +50,8 @@ class Excel extends Order
 
     $this->createOrdersTable($orders);
 
-    $this->response->setHeader('Content-Type', $this->getMime($method));
-    $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.'.$method.'"');
-    $this->{($method ?? 'xlsx') . 'Writer'}->save("php://output");
+    $this->response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.xlsx"');
+    $this->writer->save("php://output");
   }
 }

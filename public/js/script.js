@@ -28,3 +28,4 @@ sortInputs.forEach(sortInput => {
     }
   });
 });
+

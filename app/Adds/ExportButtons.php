@@ -20,34 +20,35 @@ class ExportButtons {
   }
 
   private function createExportButtons() {
-    return <<<END
-    <form id="export" method="POST" action="" class="buttons">
-        {$this->getHiddenPostFields()}
-        <button class="button export">Export (.json)</button>
-        <button class="button export">Export (.xlsx)</button>
-        <button class="button export">Export (.csv)</button>
-        <button class="button export">Export (.docx)</button>
-        <script>
-          const btns = document.querySelectorAll('.button');
-          const form = document.querySelector('#export');
+    return <<<HTML
+      <div id="export" method="POST" action="" class="buttons">
+          <button class="button export" name="json">Export (.json)</button>
+          <button class="button export" name="xlsx">Export (.xlsx)</button>
+          <button class="button export" name="docx">Export (.docx)</button>
+          <script>
+            const btns = document.querySelectorAll('.button');
+            const form = document.querySelector('#search');
+            
+            btns.forEach((btn) => {
+              btn.addEventListener('click', (ev) => {
+                const regexp = /\/(\w+?)?($|\?)/;
+                let exportType = '';
 
-          btns.forEach((btn) => {
-            btn.addEventListener('click', (ev) => {
-              ev.preventDefault()
-              const regexp = /\.[a-z]{3,4}/i;
-              const action = btn.textContent.match(regexp)[0].slice(1, 5);
+                if(btn.name === 'xlsx') exportType = '/excel';
+                if(btn.name === 'docx') exportType = '/word';
+                if(btn.name === 'json') exportType = '/json';
 
-              if(action === 'docx') form.setAttribute('action', '/word');
-              if(action === 'xlsx') form.setAttribute('action', '/excel');
-              if(action === 'csv') form.setAttribute('action', '/excel?method=csv');
-              if(action === 'json') form.setAttribute('action', '/json');
-
-              form.submit();
+                if(form.action.includes('?')) {
+                  form.action = form.action.replace(regexp, exportType + '?');
+                } else {
+                  form.action = form.action.replace(regexp, exportType);
+                }
+                form.submit();
+              });
             });
-          });
-        </script>
-    </form>
-    END;
+          </script>
+      </div>
+    HTML;
   }
 
   public function getExportButtons() {

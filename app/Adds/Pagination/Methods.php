@@ -220,7 +220,7 @@ class Methods {
   }
 
   protected function getPaginationJS(string $formID, string $inputsClass): string {
-    return "
+    return <<<HTML
       <script>
         const {$inputsClass} = document.querySelectorAll('.{$inputsClass}');
         const {$formID} = document.querySelector('#{$formID}');
@@ -234,11 +234,11 @@ class Methods {
           });
       });
       </script>
-    ";
+    HTML;
   }
 
   protected function getSelectJS($formID) {
-    return "
+    return <<<HTML
       <script>
         const select = document.querySelector('select.button');
         const {$formID} = document.querySelector('#{$formID}');
@@ -249,7 +249,7 @@ class Methods {
           window.pagination.submit();
         });
       </script>
-    ";
+    HTML;
   }
 
   protected function createPerPageLinks(array $perPageArray) : string
