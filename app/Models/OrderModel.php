@@ -3,47 +3,53 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Adds\Order\OrderSearchCriteria;
+use App\Adds\Order;
 
 class OrderModel extends Model
 {
-    protected $table = 'orders';
-    protected $allowedFields = ['uuid', 'status', 'shipment', 'payment', 'shipping_total', 'date', 'client_id'];
+    protected $table = 'Orders';
+    protected $allowedFields = ['UUID', 'Status', 'Shipment', 'Payment', 'Shipping', 'ClientID', 'Date'];
     protected $returnType = 'object';
 
-    public function getOrdersRequest(OrderSearchCriteria $criteria = null): Model
+    public function getOrdersRequest(Order\OrderSortCriteria $criteria = null): Model
     {
-        
-        $request = $this->select(['uuid', 'status', 'shipping_total', 'shipment']);
+        $request = $this->select(['UUID', 'Status', 'Shipping', 'Shipment', 'Payment', 'ClientID', 'Date']);
 
         if (isset($criteria)) {
             //Get search criteria
-            !empty($criteria->getUUID()) ? $request->like('uuid', $criteria->getUUID()) : null;
-            !empty($criteria->getStatus()) ? $request->like('status', $criteria->getStatus()) : null;
-            !empty($criteria->getShippingTotal()) ? $request->like('shipping_total', $criteria->getShippingTotal()) : null;
-            !empty($criteria->getShipment()) ? $request->like('shipment', $criteria->getShipment()) : null;
-            
+            !empty($criteria->getUUID()) ? $request->like('UUID', $criteria->getUUID()) : null;
+            !empty($criteria->getStatus()) ? $request->like('Status', $criteria->getStatus()) : null;
+            !empty($criteria->getShipping()) ? $request->like('Shipping', $criteria->getShipping()) : null;
+            !empty($criteria->getShipment()) ? $request->like('Shipment', $criteria->getShipment()) : null;
+            !empty($criteria->getPayment()) ? $request->like('Payment', $criteria->getPayment()) : null;
+            !empty($criteria->getClientID()) ? $request->like('ClientID', $criteria->getClientID()) : null;
+            !empty($criteria->getDate()) ? $request->like('Date', $criteria->getDate()) : null;
+
             //Get sort criteria
-            !empty($criteria->getSortUUID()) ? $request->orderBy('uuid', $criteria->getSortUUID()) : null;
-            !empty($criteria->getSortStatus()) ? $request->orderBy('status', $criteria->getSortStatus()) : null;
-            !empty($criteria->getSortShippingTotal()) ? $request->orderBy('shipping_total', $criteria->getSortShippingTotal()) : null;
-            !empty($criteria->getSortShipment()) ? $request->orderBy('shipment', $criteria->getSortShipment()) : null;
+            !empty($criteria->getSortUUID()) ? $request->orderBy('UUID', $criteria->getSortUUID()) : null;
+            !empty($criteria->getSortStatus()) ? $request->orderBy('Status', $criteria->getSortStatus()) : null;
+            !empty($criteria->getSortShipping()) ? $request->orderBy('Shipping', $criteria->getSortShipping()) : null;
+            !empty($criteria->getSortShipment()) ? $request->orderBy('Shipment', $criteria->getSortShipment()) : null;
+            !empty($criteria->getSortPayment()) ? $request->orderBy('Payment', $criteria->getSortPayment()) : null;
+            !empty($criteria->getSortClientID()) ? $request->orderBy('ClientID', $criteria->getSortClientID()) : null;
+            !empty($criteria->getSortDate()) ? $request->orderBy('Date', $criteria->getSortDate()) : null;
         }
 
         return $request;
     }
 
-    public function countOrders(OrderSearchCriteria $criteria): int
+    public function countOrders(Order\OrderSortCriteria $criteria): int
     {
         return $this->getOrdersRequest($criteria)->countAllResults();
     }
 
-    public function getOrders(OrderSearchCriteria $criteria = null, int $limit = null, int $offset = null): array
+    public function getOrders(Order\OrderSortCriteria $criteria = null, int $limit = null, int $offset = null): array
     {
         return $this->getOrdersRequest($criteria)->findAll($limit, $offset);
     }
 
-    public function createOrder($data) {
+    public function createOrder($data)
+    {
         return $this->insert($data);
     }
 }

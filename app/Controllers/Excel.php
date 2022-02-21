@@ -2,56 +2,46 @@
 
 namespace App\Controllers;
 
-use App\Adds\Order\Order;
+use App\Adds;
+use PhpOffice\PhpSpreadsheet;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
-class Excel extends Order
+class Excel extends Adds\Order\Order
 {
-  private $spreadsheet;
-  private $sheet;
-  private $xlsxWriter;
-  private $csvWriter;
+    private $sheet;
 
-  public function __construct()
-  {
-      $this->spreadsheet = new Spreadsheet();
-      $this->sheet = $this->spreadsheet->getActiveSheet();
-      $this->writer = new Xlsx($this->spreadsheet);
-  }
+    private function createOrdersTable(array $arr): void
+    {
+        $data = [];
+        $keys = array_keys(get_object_vars($arr[0]));
+        $data[] = $keys;
 
-  private function createOrdersTable(array $arr): void
-  {
-    $data = [];
-    $keys = array_keys(get_object_vars($arr[0]));
-    $data[] = $keys;
+        foreach ($arr as $row) {
+            $item = [];
+            foreach ($keys as $key) {
+                $item[] = $row->{$key};
+            }
+            $data[] = $item;
+        }
 
-    foreach($arr as $row) {
-      $item = [];
-      foreach($keys as $key) {
-        $item[] = $row->{$key};
-      }
-      $data[] = $item;
+        $this->sheet->fromArray($data, null, 'A1');
     }
 
-    $this->sheet->fromArray($data, NULL, 'A1');
-  }
+    public function index()
+    {
+        helper('file');
+        $this->initialize();
+        $spreadsheet = new PhpSpreadsheet\Spreadsheet();
+        $this->sheet = $spreadsheet->getActiveSheet();
 
-  public function index()
-  {
-    helper('file');
-    $this->initialize();
+        $limit = $this->getOrdersCount();
+        $orders = $this->getOrders($limit, 0);
 
-    $method = $this->request->getGet('method') ?? 'xlsx';
+        $this->createOrdersTable($orders);
 
-    $limit = $this->getOrdersCount();
-    $orders = $this->getOrders($limit, 0);
+        $this->response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.xlsx"');
 
-    $this->createOrdersTable($orders);
-
-    $this->response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.xlsx"');
-    $this->writer->save("php://output");
-  }
+        $writer = new PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save("php://output");
+    }
 }

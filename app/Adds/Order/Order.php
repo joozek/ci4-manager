@@ -2,49 +2,94 @@
 
 namespace App\Adds\Order;
 
-use App\Controllers\Main;
-use App\Adds\Pagination;
+use App\Controllers;
+use App\Models;
 
-abstract class Order extends Main
+/**
+ * Abstract class defined basic functionalities.
+ */
+abstract class Order extends Controllers\Main
 {
-    private $defaultLimit = 50;
-    private $defaultOffset = 0;
+    /**
+     * Default orders limit
+     * @var int
+     */
+    protected int $limit = 10;
+    /**
+     * Max orders limit
+     * @var int
+     */
+    protected int $maxLimit = 50;
+    /**
+     * Default offset
+     * @var int
+     */
+    protected int $offset = 0;
 
-    protected function initialize() 
+    /**
+     * Initialize model, postParams and criteria.
+     * 
+     * @return void
+     */
+    protected function initialize(): void
     {
-        $this->model = model(OrderModel::class);
-        
-        $this->postParams = (object) $this->request->getPost();
-
+        $this->model = model(Models\OrderModel::class);
+        $this->postParams = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : $this->request->getPost();
         $this->criteria = $this->setCriteria($this->postParams);
     }
 
-    protected function setCriteria(object $params): OrderSearchCriteria 
+    /**
+     * Set criteria from object and return created criteria.
+     * 
+     * @param object $params
+     * 
+     * @return OrderSortCriteria
+     */
+    protected function setCriteria(object $params): OrderSortCriteria
     {
-        $criteria = new OrderSearchCriteria();
+        $criteria = new OrderSortCriteria();
 
         // Set search criteria
-        !empty($params->uuid) ? $criteria->setUUID($params->uuid) : null;
-        !empty($params->status) ? $criteria->setStatus($params->status) : null;
-        !empty($params->shipping_total) ? $criteria->setShippingTotal($params->shipping_total) : null;
-        !empty($params->shipment) ? $criteria->setShipment($params->shipment) : null;
+        !empty($params->UUID) ? $criteria->setUUID($params->UUID) : null;
+        !empty($params->Status) ? $criteria->setStatus($params->Status) : null;
+        !empty($params->Shipping) ? $criteria->setShipping($params->Shipping) : null;
+        !empty($params->Shipment) ? $criteria->setShipment($params->Shipment) : null;
+        !empty($params->Payment) ? $criteria->setPayment($params->Payment) : null;
+        !empty($params->ClientID) ? $criteria->setClientID($params->ClientID) : null;
+        !empty($params->Date) ? $criteria->setDate($params->Date) : null;
 
         // Set sort criteria
-        !empty($params->sort_uuid) ? $criteria->setSortUUID($params->sort_uuid) : null;
-        !empty($params->sort_status) ? $criteria->setSortStatus($params->sort_status) : null;
-        !empty($params->sort_shipping_total) ? $criteria->setSortShippingTotal($params->sort_shipping_total) : null;
-        !empty($params->sort_shipment) ? $criteria->setSortShipment($params->sort_shipment) : null;
+        !empty($params->sortUUID) ? $criteria->setSortUUID($params->sortUUID) : null;
+        !empty($params->sortStatus) ? $criteria->setSortStatus($params->sortStatus) : null;
+        !empty($params->sortShipping) ? $criteria->setSortShipping($params->sortShipping) : null;
+        !empty($params->sortShipment) ? $criteria->setSortShipment($params->sortShipment) : null;
+        !empty($params->sortPayment) ? $criteria->setSortPayment($params->sortPayment) : null;
+        !empty($params->sortClientID) ? $criteria->setSortClientID($params->sortClientID) : null;
+        !empty($params->sortDate) ? $criteria->setSortDate($params->sortDate) : null;
 
         return $criteria;
     }
 
-    protected function getOrdersCount(): int 
+    /**
+     * Get number of orders those exists in database.
+     * 
+     * @return int
+     */
+    protected function getOrdersCount(): int
     {
         return $this->model->countOrders($this->criteria);
     }
 
-    protected function getOrders($limit, $offset): array
+    /**
+     * Get orders from database.
+     * 
+     * @param int|null $limit Number of items.
+     * @param int|null $offset Number of cursor position.
+     * 
+     * @return array
+     */
+    protected function getOrders(int $limit = null, int $offset = null): array
     {
-        return $this->model->getOrders($this->criteria, $limit, $offset);
+        return $this->model->getOrders($this->criteria, $limit ?? $this->limit, $offset ?? $this->offset);
     }
 }

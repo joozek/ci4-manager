@@ -2,16 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Adds\Order\Order;
-use App\Adds\Order\OrderAction;
+use App\Adds;
 
-use App\Adds\Pagination;
-use App\Adds\ExportButtons;
-class OrderGUI extends Order
+class OrderGUI extends Adds\Order\Order
 {
-    public function index() 
+    public function index()
     {
-        helper(['form', 'object', 'console']);
+        helper(['form', 'object']);
 
         $this->initialize();
         $ordersCount = $this->getOrdersCount();
@@ -26,18 +23,18 @@ class OrderGUI extends Order
             'perPageArray' => [5, 10, 15, 20, 25],
         ];
 
-        $paginator = new Pagination($options);
+        $paginator = new Adds\Pagination($options);
         $paginator->setPage($postPage);
 
-        $export = new ExportButtons();
+        $export = new Adds\ExportButtons();
 
         $perPage = $paginator->getPerPage();
         $offset = $paginator->getOffset();
 
         $guiData = [
-            'action' => new OrderAction(),
+            'action' => new Adds\Order\OrderAction(),
             'perPageField' => $paginator->getPerPageField(),
-            'perPage' => $perPage, 
+            'perPage' => $perPage,
             'form' => $this->postParams,
             'orders' => $this->getOrders($perPage, $offset),
             'pagination' => $paginator->getPagination($paginator->getPage()),
@@ -45,5 +42,10 @@ class OrderGUI extends Order
         ];
 
         return view('order/gui', $guiData);
+    }
+
+    public function getGuiData()
+    {
+        return $this->guiData;
     }
 }

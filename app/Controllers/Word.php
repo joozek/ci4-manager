@@ -2,12 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Adds\Order\Order;
+use App\Adds;
+use PhpOffice\PhpWord;
 
-use \PhpOffice\PhpWord\PhpWord;
-use \PhpOffice\PhpWord\IOFactory;
-
-class Word extends Order
+class Word extends Adds\Order\Order
 {
     private $phpWord;
     private $colSize = 1500;
@@ -30,9 +28,9 @@ class Word extends Order
 
     public function __construct()
     {
-        $this->phpWord = new PhpWord();
+        $this->phpWord = new PhpWord\PhpWord();
         $this->section = $this->phpWord->addSection();
-        $this->writer = IOFactory::createWriter($this->phpWord, 'Word2007');
+        $this->writer = PhpWord\IOFactory::createWriter($this->phpWord, 'Word2007');
     }
 
     private function createOrdersTable(array $orders): void
@@ -57,14 +55,14 @@ class Word extends Order
 
     public function index()
     {
-      $this->initialize();
-      $limit = $this->getOrdersCount();
-      $orders = $this->getOrders($limit, 0);
+        $this->initialize();
+        $limit = $this->getOrdersCount();
+        $orders = $this->getOrders($limit, 0);
 
-      $this->createOrdersTable($orders);
-        
-      $this->response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-      $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.docx"');
-      $this->writer->save('php://output');
+        $this->createOrdersTable($orders);
+
+        $this->response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        $this->response->setHeader('Content-Disposition', 'attachment; filename="orders.docx"');
+        $this->writer->save('php://output');
     }
 }

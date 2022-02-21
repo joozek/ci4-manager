@@ -13,9 +13,9 @@
             <div class="search list">
                 <input type="hidden" name="<?= $perPageField ?>" value="<?= getIfPropertyExists($form, 'perPage') ?>" />
                 <input type="hidden" name="page" value="<?= getIfPropertyExists($form, 'page') ?>" />
-                <input type="search" name="uuid" value="<?= getIfPropertyExists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
+                <input type="search" name="UUID" value="<?= getIfPropertyExists($form, 'uuid') ?>" class="search__input" placeholder="Search UUID" />
                 <input type="search" name="status" + value="<?= getIfPropertyExists($form, 'status') ?>" class="search__input" placeholder="Search status" />
-                <input type="search" name="shipping_total" value="<?= getIfPropertyExists($form, 'shipping_total') ?>" class="search__input" placeholder="Search total shipping" />
+                <input type="search" name="shipping" value="<?= getIfPropertyExists($form, 'shipping') ?>" class="search__input" placeholder="Search total shipping" />
                 <input type="search" name="shipment" value="<?= getIfPropertyExists($form, 'shipment') ?>" class="search__input" placeholder="Search shipment" />
                 <input type="submit" value="Search" class="search__button" />
             </div> 
@@ -26,7 +26,7 @@
                         <?php
                         if (isset($form->sort_uuid) && $form->sort_uuid === 'DESC') {
                             echo '<i class="fa fa-sort-up"></i>';
-                        } else if (isset($form->sort_uuid) && $form->sort_uuid === 'ASC') {
+                        } elseif (isset($form->sort_uuid) && $form->sort_uuid === 'ASC') {
                             echo '<i class="fa fa-sort-down"></i>';
                         } else {
                             echo '<i class="fa fa-sort"></i>';
@@ -41,7 +41,7 @@
                         <?php
                         if (isset($form->sort_status) && $form->sort_status === 'DESC') {
                             echo '<i class="fa fa-sort-up"></i>';
-                        } else if (isset($form->sort_status) && $form->sort_status === 'ASC') {
+                        } elseif (isset($form->sort_status) && $form->sort_status === 'ASC') {
                             echo '<i class="fa fa-sort-down"></i>';
                         } else {
                             echo '<i class="fa fa-sort"></i>';
@@ -56,14 +56,14 @@
                         <?php
                         if (isset($form->sort_shipping_total) && $form->sort_shipping_total === 'DESC') {
                             echo '<i class="fa fa-sort-up"></i>';
-                        } else if (isset($form->sort_shipping_total) && $form->sort_shipping_total === 'ASC') {
+                        } elseif (isset($form->sort_shipping_total) && $form->sort_shipping_total === 'ASC') {
                             echo '<i class="fa fa-sort-down"></i>';
                         } else {
                             echo '<i class="fa fa-sort"></i>';
                         }
                         ?>
                     </button>
-                    <input type="hidden" name="sort_shipping_total" value="<?= ($form->sort_shipping_total ?? '') ?>" />
+                    <input type="hidden" name="sort_shipping" value="<?= ($form->sort_shipping_total ?? '') ?>" />
                 </div>
                 <div class="list__header">
                     <h3>Shipment</h3>
@@ -71,7 +71,7 @@
                         <?php
                         if (isset($form->sort_shipment) && $form->sort_shipment === 'DESC') {
                             echo '<i class="fa fa-sort-up"></i>';
-                        } else if (isset($form->sort_shipment) && $form->sort_shipment === 'ASC') {
+                        } elseif (isset($form->sort_shipment) && $form->sort_shipment === 'ASC') {
                             echo '<i class="fa fa-sort-down"></i>';
                         } else {
                             echo '<i class="fa fa-sort"></i>';

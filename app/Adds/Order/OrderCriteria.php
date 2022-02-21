@@ -4,78 +4,81 @@ namespace App\Adds\Order;
 
 class OrderCriteria
 {
-  private $uuid = null;
-  private $status = null;
-  private $shippingTotal = null;
-  private $shipment = null;
-  private $payment = null;
-  private $clientID = null;
-  private $date = null;
+    private $UUID = null;
+    private $Status = null;
+    private $Shipping = null;
+    private $Shipment = null;
+    private $Payment = null;
+    private $ClientID = null;
+    private $Date = null;
 
-  public function getUUID()
-  {
-    return $this->uuid;
-  }
+    public function getUUID()
+    {
+        return $this->UUID;
+    }
 
-  public function getStatus()
-  {
-    return $this->status;
-  }
+    public function getStatus()
+    {
+        return $this->Status;
+    }
 
-  public function getShippingTotal()
-  {
-    return (float) $this->shippingTotal;
-  }
+    public function getShipping()
+    {
+        return $this->Shipping;
+    }
 
-  public function getShipment()
-  {
-    return $this->shipment;
-  }
+    public function getShipment()
+    {
+        return $this->Shipment;
+    }
 
-  public function getPayment() {
-    return $this->payment;
-  }
+    public function getPayment()
+    {
+        return $this->Payment;
+    }
 
-  public function getClientID() {
-    return $this->clientID;
-  }
+    public function getClientID()
+    {
+        return $this->ClientID;
+    }
 
-  public function getDate() {
-    return $this->date;
-  }
+    public function getDate()
+    {
+        return $this->Date;
+    }
 
-  public function setUUID(string $uuid = null): void
-  {
-    $this->uuid = $uuid;
-  }
+    public function setUUID(string $UUID = null): void
+    {
+        $this->UUID = $UUID;
+    }
 
-  public function setStatus(string $status = null): void
-  {
-    $this->status = $status;
-  }
+    public function setStatus(string $Status = null): void
+    {
+        $this->Status = $Status;
+    }
 
-  public function setShippingTotal(string $shippingTotal = null): void
-  {
-    $this->shippingTotal = $shippingTotal;
-  }
+    public function setShipping(string $Shipping = null): void
+    {
+        $this->Shipping = (float) $Shipping;
+    }
 
-  public function setShipment(string $shipment): void
-  {
-    $this->shipment = $shipment;
-  }
+    public function setShipment(string $Shipment): void
+    {
+        $this->Shipment = $Shipment;
+    }
 
-  public function setPayment(string $payment): void
-  {
-    $this->payment = $payment;
-  }
+    public function setPayment(string $Payment): void
+    {
+        $this->Payment = $Payment;
+    }
 
-  public function setClientID(string $clientID): void
-  {
-    $this->clientID = $clientID;
-  }
+    public function setClientID(string $ClientID): void
+    {
+        $this->ClientID = $ClientID;
+    }
 
-  public function setDate(string $date): void
-  {
-    $this->date = $date;
-  }
+    public function setDate(string $Date): void
+    {
+        $this->Date = $Date;
+    }
 }
