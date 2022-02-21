@@ -10,10 +10,8 @@ class JSON extends Order\Order
     {
         $this->initialize();
 
-        $limit = !empty($this->postParams->limit) && $this->postParams->limit <= $this->maxLimit ? $this->postParams->limit : $this->limit;
-        $offset = !empty($this->postParams->offset) ? $this->postParams->offset : $this->offset;
+        $orders = $this->model->getOrders($this->criteria, $this->getLimit(), $this->getOffset());
 
-        $orders = $this->model->getOrders($this->criteria, $limit, $offset);
         return $this->response->setJSON(['count' => count($orders), 'orders' => $orders ]);
     }
 }

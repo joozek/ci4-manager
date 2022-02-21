@@ -81,4 +81,8 @@ class OrderCriteria
     {
         $this->Date = $Date;
     }
+
+    public function exists(string $property): bool {
+        return property_exists(new static, $property);
+    }
 }

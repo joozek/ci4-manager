@@ -27,47 +27,37 @@ abstract class Order extends Controllers\Main
     protected int $offset = 0;
 
     /**
-     * Initialize model, postParams and criteria.
+     * Initialize model, REQUEST params and set criteria.
      * 
      * @return void
      */
     protected function initialize(): void
     {
         $this->model = model(Models\OrderModel::class);
-        $this->postParams = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : $this->request->getPost();
-        $this->criteria = $this->setCriteria($this->postParams);
+        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : $this->request->getPost();
+        if(is_null($this->params)) {
+            throw new \Exception('Params object is invalid.');
+        }
+        $this->criteria = $this->setCriteria($this->params ?? (object)[]);
+    }
+
+
+    /**
+     * Get default limit
+     * 
+     * @return int
+     */
+    protected function getLimit(): int {
+        return !empty($this->params->limit) && $this->params->limit <= $this->maxLimit ? $this->params->limit : $this->limit;
     }
 
     /**
-     * Set criteria from object and return created criteria.
+     * Get
      * 
-     * @param object $params
-     * 
-     * @return OrderSortCriteria
+     * @return int
      */
-    protected function setCriteria(object $params): OrderSortCriteria
-    {
-        $criteria = new OrderSortCriteria();
-
-        // Set search criteria
-        !empty($params->UUID) ? $criteria->setUUID($params->UUID) : null;
-        !empty($params->Status) ? $criteria->setStatus($params->Status) : null;
-        !empty($params->Shipping) ? $criteria->setShipping($params->Shipping) : null;
-        !empty($params->Shipment) ? $criteria->setShipment($params->Shipment) : null;
-        !empty($params->Payment) ? $criteria->setPayment($params->Payment) : null;
-        !empty($params->ClientID) ? $criteria->setClientID($params->ClientID) : null;
-        !empty($params->Date) ? $criteria->setDate($params->Date) : null;
-
-        // Set sort criteria
-        !empty($params->sortUUID) ? $criteria->setSortUUID($params->sortUUID) : null;
-        !empty($params->sortStatus) ? $criteria->setSortStatus($params->sortStatus) : null;
-        !empty($params->sortShipping) ? $criteria->setSortShipping($params->sortShipping) : null;
-        !empty($params->sortShipment) ? $criteria->setSortShipment($params->sortShipment) : null;
-        !empty($params->sortPayment) ? $criteria->setSortPayment($params->sortPayment) : null;
-        !empty($params->sortClientID) ? $criteria->setSortClientID($params->sortClientID) : null;
-        !empty($params->sortDate) ? $criteria->setSortDate($params->sortDate) : null;
-
-        return $criteria;
+    protected function getOffset(): int {
+        return !empty($this->params->offset) ? $this->params->offset : $this->offset;
     }
 
     /**
@@ -91,5 +81,29 @@ abstract class Order extends Controllers\Main
     protected function getOrders(int $limit = null, int $offset = null): array
     {
         return $this->model->getOrders($this->criteria, $limit ?? $this->limit, $offset ?? $this->offset);
+    }
+
+    /**
+     * Set criteria from object and return created criteria.
+     * 
+     * @param object $params Request params to search
+     * 
+     * @return OrderSortCriteria
+     */
+    protected function setCriteria(object $params): OrderSortCriteria
+    {
+        $criteria = new OrderSortCriteria();
+
+        // Set search criteria
+        foreach((array) $params as $key => $value) {
+            if($key === 'limit' || $key === 'offset') continue;
+            if($criteria->exists($key)) {
+                $criteria->{'set' . ucfirst($key)}($value);
+            } else {
+                throw new \Exception('Invalid parameter');
+            }
+        }
+
+        return $criteria;
     }
 }

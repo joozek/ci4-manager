@@ -43,9 +43,4 @@ class OrderGUI extends Adds\Order\Order
 
         return view('order/gui', $guiData);
     }
-
-    public function getGuiData()
-    {
-        return $this->guiData;
-    }
 }
