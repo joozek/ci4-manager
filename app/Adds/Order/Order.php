@@ -4,9 +4,8 @@ namespace App\Adds\Order;
 
 use App\Controllers;
 use App\Models;
-
 /**
- * Abstract class defined basic functionalities.
+ * Abstract class contains basic order management functions. Return maxLimit per request
  */
 abstract class Order extends Controllers\Main
 {
@@ -14,17 +13,24 @@ abstract class Order extends Controllers\Main
      * Default orders limit
      * @var int
      */
-    protected int $limit = 10;
+    protected int $limit = 50;
     /**
      * Max orders limit
      * @var int
      */
-    protected int $maxLimit = 50;
+    protected int $maxLimit = 500;
     /**
      * Default offset
      * @var int
      */
     protected int $offset = 0;
+
+    /**
+     * Default perPage
+     * 
+     * @var int
+     */
+    protected int $perPage = 10;
 
     /**
      * Get default limit
@@ -41,7 +47,7 @@ abstract class Order extends Controllers\Main
      * @return int
      */
     protected function getPerPage(): int {
-        return !empty($this->params->perPage) && $this->params->perPage <= $this->maxLimit ? $this->params->perPage : $this->limit;
+        return !empty($this->params->perPage) && $this->params->perPage <= $this->maxLimit ? $this->params->perPage : $this->perPage;
     }
 
     /**
@@ -97,14 +103,14 @@ abstract class Order extends Controllers\Main
         $criteria = new OrderSortCriteria();
 
         // Set search criteria
-        foreach((array) $params as $key => $value) {
+        foreach($params as $key => $value) {
             if($key === 'limit' || $key === 'offset') continue;
             if($key === 'perPage' || $key === 'page') continue;
             
             if($criteria->exists($key)) {
                 $criteria->{'set' . ucfirst($key)}($value);
             } else {
-                throw new \Exception('Invalid parameter');
+                throw new \Exception('Parameter "'.$key.'" does not exists. ');
             }
         }
 
@@ -119,11 +125,10 @@ abstract class Order extends Controllers\Main
     protected function initialize(): void
     {
         $this->model = model(Models\OrderModel::class);
-        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : (object) $this->request->getPost();
-        if(is_null($this->params)) {
-            throw new \Exception('Params object is invalid.');
+        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON(false, 512, JSON_THROW_ON_ERROR) : (object) $this->request->getPost();
+        if(\is_array($this->params)) {
         }
-        $this->criteria = $this->setCriteria($this->params ?? (object)[]);
+        $this->criteria = $this->setCriteria($this->params);
     }
 
 }

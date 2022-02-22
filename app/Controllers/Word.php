@@ -19,7 +19,7 @@ class Word extends Adds\Order\Order
      * 
      * @var int
      */
-    private int $colSize = 1500;
+    private int $colSize = 1325;
     /**
      * Width of the rows
      * 
@@ -76,8 +76,7 @@ class Word extends Adds\Order\Order
     public function index()
     {
         $this->initialize();
-        $limit = $this->getOrdersCount();
-        $orders = $this->getOrders($limit, 0);
+        $orders = $this->getOrders($this->getLimit(), $this->getOffset());
 
         $this->phpWord = new PhpWord\PhpWord();
         $this->section = $this->phpWord->addSection();

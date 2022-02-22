@@ -44,7 +44,7 @@
                 <div class="list__header">
                     <h3>Shipment</h3>
                     <button class="arrow">
-                       <?= getSortIcon($form, 'sortStatus') ?>
+                       <?= getSortIcon($form, 'sortShipment') ?>
                     </button>
                     <input type="hidden" name="sortShipment" value="<?= ($form->sortShipment ?? '') ?>" />
                 </div>

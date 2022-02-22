@@ -6,7 +6,7 @@
  * @param object $object The object contains property
  * @param string $property Property's name that will be check
  * 
- * @return bool
+ * @return string
  */
 function getIfPropertyExists(object $object, string $param): string
 {
@@ -38,8 +38,8 @@ function getSortIcon(object $form, string $property): string
  * @return string
  */
 function getSearchJS(): string {
-    $str = '<script>';
-    $str .= <<<'JS'
+    $js = '<script>';
+    $js .= <<<'JS'
         const sortInputs = document.querySelectorAll('.arrow');
         const search = document.querySelector('#search');
         const arrow = {
@@ -52,26 +52,26 @@ function getSearchJS(): string {
             sortInput.addEventListener('click', (ev) => {
                 ev.preventDefault();
                 const input = sortInput.nextElementSibling;
-            
+
                 if (input.value === '') {
-                input.value = 'ASC';
-                sortInput.innerHTML = arrow.asc;
-                search.submit();
-                return;
+                    input.value = 'ASC';
+                    sortInput.innerHTML = arrow.asc;
+                    search.submit();
+                    return;
                 }
             
                 if (input.value === 'ASC') {
-                input.value = 'DESC';
-                sortInput.innerHTML = arrow.desc;
-                search.submit();
-                return;
+                    input.value = 'DESC';
+                    sortInput.innerHTML = arrow.desc;
+                    search.submit();
+                    return;
                 }
             
                 if (input.value === 'DESC') {
-                input.value = '';
-                sortInput.innerHTML = arrow.none;
-                search.submit();
-                return;
+                    input.value = '';
+                    sortInput.innerHTML = arrow.none;
+                    search.submit();
+                    return;
                 }
             });
         });
@@ -84,6 +84,6 @@ function getSearchJS(): string {
             search.submit();
         });
     JS;
-    $str .= '</script>';
-    return $str;
+    $js .= '</script>';
+    return $js;
 }

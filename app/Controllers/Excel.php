@@ -48,8 +48,7 @@ class Excel extends Adds\Order\Order
         $spreadsheet = new PhpSpreadsheet\Spreadsheet();
         $this->sheet = $spreadsheet->getActiveSheet();
 
-        $limit = $this->getOrdersCount();
-        $orders = $this->getOrders($limit, 0);
+        $orders = $this->getOrders($this->getLimit(), $this->getOffset());
 
         $this->createOrdersTable($orders);
 
