@@ -2,17 +2,61 @@
 
 namespace App\Adds\Order;
 
+/**
+ * OrderCriteria that allows to create search criteria object with additional sorting.
+ */
 class OrderSortCriteria extends OrderCriteria
 {
+    /**
+     * It accepts two values: ASC, DESC and sorting orders by UUID or no (if null)
+     * 
+     * @var string|null
+     */
     private $sortUUID = null;
+    /**
+     * It accepts two values ASC, DESC and sorting orders by status or no (if null).
+     * 
+     * @var string|null
+     */
     private $sortStatus = null;
+    /**
+     * It accepts two values ASC, DESC and sorting orders by shipping or no (if null)
+     * 
+     * @var string|null
+     */
     private $sortShipping = null;
+    /**
+     * It accepts two values ASC, DESC and sorting orders by shipment or no (if null)
+     * 
+     * @var string|null
+     */
     private $sortShipment = null;
+    /**
+     * It accepts two values ASC, DESC and sorting orders by payment or no (if null)
+     * 
+     * @var string|null
+     */
     private $sortPayment = null;
+    /**
+     * It accepts two values ASC, DESC and sorting orders by cliendID or no (if null)
+     * 
+     * @var string|null
+     */
     private $sortClientID = null;
+    /**
+     * It accepts two values: ASC DESC and sorting orders by Date or no (if null)
+     * @var string|null
+     */
     private $sortDate = null;
 
-    private function isValidSortType(string $type = null)
+    /**
+     * Check type is a valid sort type. Valid sort types: ASC or DESC (null meaning no sort).
+     * 
+     * @param string|null $type
+     * 
+     * @return bool
+     */
+    private function isValidSortType(string $type = null): bool
     {
         if ($type !== 'ASC' && $type !== 'DESC') {
             return false;
@@ -21,101 +65,193 @@ class OrderSortCriteria extends OrderCriteria
         return true;
     }
 
-    public function getSortUUID()
+    /**
+     * If set return a type of UUID sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortUUID(): string|null
     {
         return $this->sortUUID;
     }
 
-    public function getSortStatus()
+    /**
+     *  If set return a type of status sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortStatus(): string|null
     {
         return $this->sortStatus;
     }
 
-    public function getSortShipping()
+    /**
+     * If set return a type of shipping sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortShipping(): string|null
     {
         return $this->sortShipping;
     }
 
-    public function getSortShipment()
+    /**
+     *  If set return a type of shipment sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortShipment(): string|null
     {
         return $this->sortShipment;
     }
 
-    public function getSortPayment()
+    /**
+     * If set return a type of payment sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortPayment(): string|null
     {
         return $this->sortPayment;
     }
 
-    public function getSortClientID()
+    /**
+     * If set return a type of clientID sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortClientID(): string|null
     {
         return $this->sortClientID;
     }
 
-    public function getSortDate()
+    /**
+     * If set return a type of date sorting. If is null sorting is off.
+     * 
+     * @return string
+     */
+    public function getSortDate(): string|null
     {
         return $this->sortDate;
     }
 
-    public function setSortUUID(string $UUID = null): void
+    
+    /**
+     * Set type of sorting by UUID. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortUUID(string $type): self
     {
-        if (!$this->isValidSortType($UUID)) {
-            return;
+        if (!$this->isValidSortType($type)) {
+            return $this;
         }
 
-        $this->sortUUID = $UUID;
+        $this->sortUUID = $type;
+     
+        return $this;
+    }
+    /**
+     * Set type of sorting by Status. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortStatus(string $type): self
+    {
+        if (!$this->isValidSortType($type)) {
+            return $this;
+        }
+
+        $this->sortStatus = $type;
+        return $this;
     }
 
-    public function setSortStatus(string $status = null): void
+     /**
+     * Set type of sorting by Shipping. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortShipping(string $type): self
     {
-        if (!$this->isValidSortType($status)) {
-            return;
+        if (!$this->isValidSortType($type)) {
+            return $this;
         }
 
-        $this->sortStatus = $status;
+        $this->sortShipping = $type;
+        return $this;
     }
 
-    public function setSortShipping(string $shipping = null): void
+    /**
+     * Set type of sorting by Shipment. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortShipment(string $type): self
     {
-        if (!$this->isValidSortType($shipping)) {
-            return;
+        if (!$this->isValidSortType($type)) {
+            return $this;
         }
 
-        $this->sortShipping = $shipping;
+        $this->sortShipment = $type;
+        return $this;
     }
 
-    public function setSortShipment(string $shipment = null): void
+    /**
+     * Set type of sorting by Payment. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortPayment(string $type): self
     {
-        if (!$this->isValidSortType($shipment)) {
-            return;
+        if (!$this->isValidSortType($type)) {
+            return $this;
         }
 
-        $this->sortShipment = $shipment;
+        $this->sortPayment = $type;
+        return $this;
     }
 
-    public function setSortPayment(string $payment = null): void
+    /**
+     * Set type of sorting by ClientID. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortClientID(string $type): self
     {
-        if (!$this->isValidSortType($payment)) {
-            return;
+        if (!$this->isValidSortType($type)) {
+            return $this;
         }
 
-        $this->sortPayment = $payment;
+        $this->sortClientID = $type;
+        return $this;
     }
 
-    public function setSortClientID(string $clientID = null): void
+    /**
+     * Set type of sorting by Date. Default is null (not sorting). 
+     * 
+     * @param string $type Type of sorting. Accept only ASC or DESC.
+     * 
+     * @return self
+     */
+    public function setSortDate(string $type): self
     {
-        if (!$this->isValidSortType($clientID)) {
-            return;
+        if (!$this->isValidSortType($type)) {
+            return $this;
         }
 
-        $this->sortClientID = $clientID;
-    }
-
-    public function setSortDate(string $date = null): void
-    {
-        if (!$this->isValidSortType($date)) {
-            return;
-        }
-
-        $this->sortDate = $date;
+        $this->sortDate = $type;
+        return $this;
     }
 }

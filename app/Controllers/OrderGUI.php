@@ -4,11 +4,23 @@ namespace App\Controllers;
 
 use App\Adds;
 
+/**
+ * Controller that show GUI in browser.
+ * 
+ * Basic functions:
+ * - View order basic info
+ * - Paginate the orders
+ */
 class OrderGUI extends Adds\Order\Order
 {
+    /**
+     * Show GUI and initialize pagination
+     * 
+     * @return void
+     */
     public function index()
     {
-        helper(['form', 'object']);
+        helper(['form', 'view']);
 
         $this->initialize();
         $ordersCount = $this->getOrdersCount();
