@@ -15,15 +15,14 @@ class Excel extends Adds\Order\Order
     /**
      * Create excel table contains orders.
      * 
-     * @param array $orders
+     * @param array $orders Array contains orders
      * 
      * @return self
      */
     private function createOrdersTable(array $orders): self
     {
-        $data = [];
         $keys = array_keys(get_object_vars($orders[0]));
-        $data[] = $keys;
+        $data = [$keys];
 
         foreach ($orders as $row) {
             $item = [];

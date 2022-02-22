@@ -27,22 +27,6 @@ abstract class Order extends Controllers\Main
     protected int $offset = 0;
 
     /**
-     * Initialize model, REQUEST params and set criteria.
-     * 
-     * @return void
-     */
-    protected function initialize(): void
-    {
-        $this->model = model(Models\OrderModel::class);
-        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : $this->request->getPost();
-        if(is_null($this->params)) {
-            throw new \Exception('Params object is invalid.');
-        }
-        $this->criteria = $this->setCriteria($this->params ?? (object)[]);
-    }
-
-
-    /**
      * Get default limit
      * 
      * @return int
@@ -52,7 +36,25 @@ abstract class Order extends Controllers\Main
     }
 
     /**
-     * Get
+     * Get perPage from request
+     * 
+     * @return int
+     */
+    protected function getPerPage(): int {
+        return !empty($this->params->perPage) && $this->params->perPage <= $this->maxLimit ? $this->params->perPage : $this->limit;
+    }
+
+    /**
+     * Get page from request
+     * 
+     * @return int
+     */
+    protected function getPage(): int {
+        return !empty($this->params->page) && $this->params->page >= 1 ? $this->parmas->page : 1;
+    }
+
+    /**
+     * Get offset from request
      * 
      * @return int
      */
@@ -106,4 +108,20 @@ abstract class Order extends Controllers\Main
 
         return $criteria;
     }
+
+    /**
+     * Initialize model, REQUEST params and set criteria.
+     * 
+     * @return void
+     */
+    protected function initialize(): void
+    {
+        $this->model = model(Models\OrderModel::class);
+        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : $this->request->getPost();
+        if(is_null($this->params)) {
+            throw new \Exception('Params object is invalid.');
+        }
+        $this->criteria = $this->setCriteria($this->params ?? (object)[]);
+    }
+
 }

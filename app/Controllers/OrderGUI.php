@@ -21,34 +21,26 @@ class OrderGUI extends Adds\Order\Order
     public function index()
     {
         helper(['form', 'view']);
-
         $this->initialize();
-        $ordersCount = $this->getOrdersCount();
-
-        $postPerPage = !empty($this->postParams->perPage) ? (int) $this->postParams->perPage : 10;
-        $postPage = !empty($this->postParams->page) ? (int) $this->postParams->page : 1;
 
         $options = [
             'action' => '/',
-            'perPage' => $postPerPage,
-            'totalRows' => $ordersCount,
+            'perPage' => $this->getPerPage(),
+            'totalRows' => $this->getOrdersCount(),
             'perPageArray' => [5, 10, 15, 20, 25],
         ];
 
         $paginator = new Adds\Pagination($options);
-        $paginator->setPage($postPage);
+        $paginator->setPage($this->getPage());
 
         $export = new Adds\ExportButtons();
-
-        $perPage = $paginator->getPerPage();
-        $offset = $paginator->getOffset();
 
         $guiData = [
             'action' => new Adds\Order\OrderAction(),
             'perPageField' => $paginator->getPerPageField(),
-            'perPage' => $perPage,
+            'perPage' => $paginator->getPerPage(),
             'form' => $this->postParams,
-            'orders' => $this->getOrders($perPage, $offset),
+            'orders' => $this->getOrders($paginator->getPerPage(), $paginator->getOffset()),
             'pagination' => $paginator->getPagination($paginator->getPage()),
             'export' => $export->getExportButtons(),
         ];
