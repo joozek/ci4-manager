@@ -8,9 +8,9 @@
  * 
  * @return bool
  */
-function getIfPropertyExists(object $object, string $param): bool
+function getIfPropertyExists(object $object, string $param): string
 {
-    return property_exists($object, $param) ? $object->{$param} : false;
+    return property_exists($object, $param) ? $object->{$param} : '';
 }
 
 /**
@@ -38,9 +38,15 @@ function getSortIcon(object $form, string $property): string
  * @return string
  */
 function getSearchJS(): string {
-    return <<<'JS'
+    $str = '<script>';
+    $str .= <<<'JS'
         const sortInputs = document.querySelectorAll('.arrow');
         const search = document.querySelector('#search');
+        const arrow = {
+            asc: '<i class="fa fa-sort-down"></i>',
+            desc: '<i class="fa fa-sort-up"></i>',
+            none: '<i class="fa fa-sort"></i>',
+        }
         
         sortInputs.forEach(sortInput => {
             sortInput.addEventListener('click', (ev) => {
@@ -49,25 +55,35 @@ function getSearchJS(): string {
             
                 if (input.value === '') {
                 input.value = 'ASC';
-                sortInput.innerHTML = '<i class="fa fa-sort-down"></i>';
+                sortInput.innerHTML = arrow.asc;
                 search.submit();
                 return;
                 }
             
                 if (input.value === 'ASC') {
                 input.value = 'DESC';
-                sortInput.innerHTML = '<i class="fa fa-sort-up"></i>';
+                sortInput.innerHTML = arrow.desc;
                 search.submit();
                 return;
                 }
             
                 if (input.value === 'DESC') {
                 input.value = '';
-                sortInput.innerHTML = '<i class="fa fa-sort"></i>';
+                sortInput.innerHTML = arrow.none;
                 search.submit();
                 return;
                 }
             });
-        });    
+        });
+
+        const searchBtn = document.querySelector('.search__button');
+
+        searchBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            search.action = '/';
+            search.submit();
+        });
     JS;
+    $str .= '</script>';
+    return $str;
 }

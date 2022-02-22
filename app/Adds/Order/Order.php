@@ -50,7 +50,7 @@ abstract class Order extends Controllers\Main
      * @return int
      */
     protected function getPage(): int {
-        return !empty($this->params->page) && $this->params->page >= 1 ? $this->parmas->page : 1;
+        return !empty($this->params->page) && $this->params->page >= 1 ? $this->params->page : 1;
     }
 
     /**
@@ -99,6 +99,8 @@ abstract class Order extends Controllers\Main
         // Set search criteria
         foreach((array) $params as $key => $value) {
             if($key === 'limit' || $key === 'offset') continue;
+            if($key === 'perPage' || $key === 'page') continue;
+            
             if($criteria->exists($key)) {
                 $criteria->{'set' . ucfirst($key)}($value);
             } else {
@@ -117,7 +119,7 @@ abstract class Order extends Controllers\Main
     protected function initialize(): void
     {
         $this->model = model(Models\OrderModel::class);
-        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : $this->request->getPost();
+        $this->params = $this->request->getHeaderLine('Content-Type') === 'application/json' ? $this->request->getJSON() : (object) $this->request->getPost();
         if(is_null($this->params)) {
             throw new \Exception('Params object is invalid.');
         }

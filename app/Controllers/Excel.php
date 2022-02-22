@@ -44,7 +44,6 @@ class Excel extends Adds\Order\Order
      */
     public function index()
     {
-        helper('file');
         $this->initialize();
         $spreadsheet = new PhpSpreadsheet\Spreadsheet();
         $this->sheet = $spreadsheet->getActiveSheet();

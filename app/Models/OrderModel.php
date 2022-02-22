@@ -14,24 +14,9 @@ use App\Adds\Order;
  */
 class OrderModel extends Model
 {
-    /**
-     * Name of table that contains orders
-     * 
-     * @var string
-     */
-    protected string $table = 'Orders';
-    /**
-     * Array contains allowed fields that can be edited.
-     * 
-     * @var array
-     */
-    protected array $allowedFields = ['UUID', 'Status', 'Shipment', 'Payment', 'Shipping', 'ClientID', 'Date'];
-    /**
-     * Type of return rows
-     * 
-     * @var string
-     */
-    protected string $returnType = 'object';
+    protected $table = 'Orders';
+    protected $allowedFields = ['UUID', 'Status', 'Shipment', 'Payment', 'Shipping', 'ClientID', 'Date'];
+    protected $returnType = 'object';
 
     /**
      * Create request contains criteria. If criteria is empty all orders will be return.

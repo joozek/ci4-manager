@@ -39,7 +39,7 @@ class OrderGUI extends Adds\Order\Order
             'action' => new Adds\Order\OrderAction(),
             'perPageField' => $paginator->getPerPageField(),
             'perPage' => $paginator->getPerPage(),
-            'form' => $this->postParams,
+            'form' => $this->params,
             'orders' => $this->getOrders($paginator->getPerPage(), $paginator->getOffset()),
             'pagination' => $paginator->getPagination($paginator->getPage()),
             'export' => $export->getExportButtons(),

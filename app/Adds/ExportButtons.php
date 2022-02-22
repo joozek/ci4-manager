@@ -20,7 +20,7 @@ class ExportButtons
               <button class="button export" name="xlsx">Export (.xlsx)</button>
               <button class="button export" name="docx">Export (.docx)</button>
               <script>
-                const btns = document.querySelectorAll('.button');
+                const btns = document.querySelectorAll('#export > button');
                 const form = document.querySelector('#search');
                 
                 btns.forEach((btn) => {
